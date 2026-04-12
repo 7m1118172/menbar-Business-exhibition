@@ -34,6 +34,20 @@
             <p>حيث يلتقي الإبداع بالقدسية، لنصنع أرقى التصاميم الحسينية والدينية.</p>
         </section>
 
+        <!-- Lightbox Modal -->
+        <div id="image-modal" class="modal">
+            <span class="close-modal">&times;</span>
+            <div class="modal-content-wrapper">
+                <img class="modal-content" id="modal-img">
+            </div>
+            <div id="modal-caption"></div>
+            <div class="zoom-controls">
+                <button onclick="zoomImage(1.2)"><i class="fas fa-plus"></i></button>
+                <button onclick="zoomImage(0.8)"><i class="fas fa-minus"></i></button>
+                <button onclick="resetZoom()"><i class="fas fa-sync-alt"></i></button>
+            </div>
+        </div>
+
         <section id="about">
             <div class="section-title">
                 <h2>تعرف علينا</h2>
@@ -104,8 +118,8 @@
                 const item = document.createElement('div');
                 item.className = `gallery-item ${img.category}`;
                 item.innerHTML = `
-                    <img src="${img.url}" alt="تصميم منبر" loading="lazy">
-                    <div class="item-overlay">
+                    <img src="${img.url}" alt="تصميم منبر" loading="lazy" onclick="openLightbox('${img.url}', '${getCategoryName(img.category)}')">
+                    <div class="item-overlay" onclick="openLightbox('${img.url}', '${getCategoryName(img.category)}')">
                         <span>${getCategoryName(img.category)}</span>
                     </div>
                 `;
@@ -159,6 +173,35 @@
                 });
             });
         });
+
+        // Lightbox Logic
+        let currentZoom = 1;
+        const modal = document.getElementById('image-modal');
+        const modalImg = document.getElementById('modal-img');
+        const captionText = document.getElementById('modal-caption');
+
+        function openLightbox(url, caption) {
+            modal.style.display = "flex";
+            modalImg.src = url;
+            captionText.innerHTML = caption;
+            resetZoom();
+        }
+
+        function zoomImage(factor) {
+            currentZoom *= factor;
+            modalImg.style.transform = `scale(${currentZoom})`;
+        }
+
+        function resetZoom() {
+            currentZoom = 1;
+            modalImg.style.transform = `scale(1)`;
+        }
+
+        document.querySelector('.close-modal').onclick = () => modal.style.display = "none";
+        
+        window.onclick = (event) => {
+            if (event.target == modal) modal.style.display = "none";
+        };
 
         window.onload = () => {
             loadData();

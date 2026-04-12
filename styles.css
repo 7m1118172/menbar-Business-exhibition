@@ -444,6 +444,93 @@ footer {
     border-radius: 10px 10px 0 0;
 }
 
+/* Lightbox Modal */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 3000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.95);
+    backdrop-filter: blur(15px);
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.modal-content-wrapper {
+    width: 90%;
+    height: 80%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    position: relative;
+    cursor: grab;
+}
+
+.modal-content-wrapper:active {
+    cursor: grabbing;
+}
+
+.modal-content {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    transition: transform 0.2s cubic-bezier(0.1, 0.7, 0.1, 1);
+    box-shadow: 0 0 50px rgba(0,0,0,0.5);
+}
+
+.close-modal {
+    position: absolute;
+    top: 20px;
+    right: 35px;
+    color: #f1f1f1;
+    font-size: 50px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+    z-index: 3001;
+}
+
+.close-modal:hover {
+    color: var(--accent-color);
+}
+
+#modal-caption {
+    margin-top: 20px;
+    color: var(--accent-color);
+    font-size: 1.5rem;
+    font-weight: 500;
+}
+
+.zoom-controls {
+    position: absolute;
+    bottom: 30px;
+    display: flex;
+    gap: 1.5rem;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 1rem 2rem;
+    border-radius: 50px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+}
+
+.zoom-controls button {
+    background: transparent;
+    border: none;
+    color: #fff;
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: color 0.3s;
+}
+
+.zoom-controls button:hover {
+    color: var(--accent-color);
+}
+
 /* Responsive */
 @media (max-width: 768px) {
     header {
@@ -453,22 +540,24 @@ footer {
     }
     
     nav ul {
-        gap: 1rem;
+        gap: 0.8rem;
     }
 
     nav ul li a {
-        font-size: 0.85rem;
+        font-size: 0.8rem;
     }
 
     .hero {
         height: auto;
-        min-height: 60vh;
-        padding-top: 120px;
+        min-height: 50vh;
+        padding-top: 130px;
     }
     
-    .hero h1 { font-size: 2.8rem; }
-    .section-title h2 { font-size: 1.8rem; }
-    .gallery-grid { grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); }
-    .about-content { padding: 1.5rem; }
-    section { padding: 2.5rem 5%; }
+    .hero h1 { font-size: 2.2rem; }
+    .section-title h2 { font-size: 1.6rem; }
+    .gallery-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
+    .about-content { padding: 1rem; }
+    section { padding: 2rem 5%; }
+    
+    .close-modal { top: 10px; right: 20px; font-size: 40px; }
 }

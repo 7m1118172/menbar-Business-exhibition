@@ -142,9 +142,10 @@
 
     <div class="admin-wrapper" id="admin-content" style="display: none;">
         <div class="admin-sidebar">
-            <button class="side-btn active" onclick="showSection('upload')"><i class="fas fa-plus"></i> إضافة مفردة</button>
+            <button class="side-btn active" onclick="showSection('upload')"><i class="fas fa-link"></i> إضافة فردية</button>
             <button class="side-btn" onclick="showSection('github')"><i class="fab fa-github"></i> استيراد من جيت هاب</button>
             <button class="side-btn" onclick="showSection('social')"><i class="fas fa-cog"></i> الإعدادات</button>
+            <button class="side-btn" onclick="showSection('backup')"><i class="fas fa-database"></i> نسخة الملف الاحتياطية</button>
             <button class="side-btn" onclick="location.reload()"><i class="fas fa-sign-out-alt"></i> خروج</button>
         </div>
 
@@ -186,6 +187,13 @@
                 <div class="form-group"><label>واتساب</label><input type="text" id="social-wa"></div>
                 <button class="btn-action" onclick="saveSocial()">حفظ</button>
             </div>
+
+            <div id="section-backup" class="admin-section">
+                <h2>نسخة البيانات (للحفظ في جيت هاب)</h2>
+                <p style="color: #ffaa00; margin-bottom: 1rem;"><i class="fas fa-exclamation-triangle"></i> انسخ هذا الكود وضعه في ملف <b>data.json</b> في جهازك ثم ارفعه على جيت هاب لضمان عدم ضياع الصور.</p>
+                <textarea id="backup-area" style="width: 100%; height: 300px; background: rgba(0,0,0,0.5); color: #0f0; font-family: monospace; padding: 10px; border-radius: 10px; border: 1px solid var(--accent-color);"></textarea>
+                <button class="btn-action" onclick="copyBackup()">نسخ الكود</button>
+            </div>
         </div>
     </div>
 
@@ -214,6 +222,14 @@
             loadAdminList(data.images);
             document.getElementById('social-insta').value = data.social.insta;
             document.getElementById('social-wa').value = data.social.wa;
+            document.getElementById('backup-area').value = JSON.stringify(data, null, 2);
+        }
+
+        function copyBackup() {
+            const area = document.getElementById('backup-area');
+            area.select();
+            document.execCommand('copy');
+            alert('تم نسخ الكود! الآن ضعه في ملف data.json وارفعه على جيت هاب لضمان ثبات الصور.');
         }
 
         async function fetchGitHubRepo() {
