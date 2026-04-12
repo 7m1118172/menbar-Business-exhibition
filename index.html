@@ -118,7 +118,9 @@
                 const item = document.createElement('div');
                 item.className = `gallery-item ${img.category}`;
                 item.innerHTML = `
-                    <img src="${img.url}" alt="تصميم منبر" loading="lazy" onclick="openLightbox('${img.url}', '${getCategoryName(img.category)}')">
+                    <img src="${img.url}" alt="تصميم منبر" loading="lazy" 
+                         onerror="this.onerror=null; repairImage(this)"
+                         onclick="openLightbox('${img.url}', '${getCategoryName(img.category)}')">
                     <div class="item-overlay" onclick="openLightbox('${img.url}', '${getCategoryName(img.category)}')">
                         <span>${getCategoryName(img.category)}</span>
                     </div>
@@ -185,6 +187,20 @@
             modalImg.src = url;
             captionText.innerHTML = caption;
             resetZoom();
+        }
+
+        function repairImage(img) {
+            // Try to re-encode the URL if it contains Arabic characters
+            const originalUrl = img.src;
+            try {
+                const parts = originalUrl.split('/');
+                const filename = parts.pop();
+                // We decode first to avoid double encoding, then encode the filename specifically
+                const decodedFilename = decodeURIComponent(filename);
+                img.src = parts.join('/') + '/' + encodeURIComponent(decodedFilename);
+            } catch(e) {
+                img.style.display = 'none';
+            }
         }
 
         function zoomImage(factor) {
