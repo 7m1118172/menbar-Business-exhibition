@@ -22,8 +22,8 @@
         <nav>
             <ul>
                 <li><a href="#home">الرئيسية</a></li>
-                <li><a href="#about">تعرف علينا</a></li>
                 <li><a href="#gallery">معرض الأعمال</a></li>
+                <li><a href="#about">تعرف علينا</a></li>
             </ul>
         </nav>
     </header>
@@ -32,6 +32,7 @@
         <section id="home" class="hero">
             <h1>مرحباً بكم في منبر</h1>
             <p>حيث يلتقي الإبداع بالقدسية، لنصنع أرقى التصاميم الحسينية والدينية.</p>
+            <a href="#gallery" class="cta-button">اذهب إلى معرض الأعمال مباشرة <i class="fas fa-chevron-down"></i></a>
         </section>
 
         <!-- Lightbox Modal -->
@@ -47,6 +48,24 @@
                 <button onclick="resetZoom()"><i class="fas fa-sync-alt"></i></button>
             </div>
         </div>
+
+        <section id="gallery">
+            <div class="section-title">
+                <h2>معرض الأعمال</h2>
+            </div>
+            
+            <div class="gallery-filters">
+                <button class="filter-btn active" onclick="filterGallery('all')">الكل</button>
+                <button class="filter-btn" onclick="filterGallery('khutaba')">الخطابة الحسينية</button>
+                <button class="filter-btn" onclick="filterGallery('mawakib')">المواكب والعزاء</button>
+                <button class="filter-btn" onclick="filterGallery('mawalid')">المواليد والأفراح</button>
+                <button class="filter-btn" onclick="filterGallery('other')">أخرى</button>
+            </div>
+
+            <div id="gallery-grid" class="gallery-grid">
+                <!-- Data will be loaded from server -->
+            </div>
+        </section>
 
         <section id="about">
             <div class="section-title">
@@ -67,24 +86,6 @@
                         <i class="fab fa-whatsapp"></i>
                     </a>
                 </div>
-            </div>
-        </section>
-
-        <section id="gallery">
-            <div class="section-title">
-                <h2>معرض الأعمال</h2>
-            </div>
-            
-            <div class="gallery-filters">
-                <button class="filter-btn active" onclick="filterGallery('all')">الكل</button>
-                <button class="filter-btn" onclick="filterGallery('khutaba')">الخطابة الحسينية</button>
-                <button class="filter-btn" onclick="filterGallery('mawakib')">المواكب والعزاء</button>
-                <button class="filter-btn" onclick="filterGallery('mawalid')">المواليد والأفراح</button>
-                <button class="filter-btn" onclick="filterGallery('other')">أخرى</button>
-            </div>
-
-            <div id="gallery-grid" class="gallery-grid">
-                <!-- Data will be loaded from localStorage -->
             </div>
         </section>
     </main>

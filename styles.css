@@ -142,6 +142,37 @@ nav ul li a:hover::after {
     position: relative;
 }
 
+.cta-button {
+    margin-top: 1.5rem;
+    padding: 1rem 2rem;
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: #000;
+    background: linear-gradient(135deg, var(--accent-color), #fff);
+    text-decoration: none;
+    border-radius: 50px;
+    transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    box-shadow: 0 10px 30px rgba(181, 149, 90, 0.3);
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    opacity: 0;
+    transform: translateY(30px);
+    animation: fadeInUp 1s 0.6s forwards, bounce 2s infinite 1.6s;
+}
+
+.cta-button:hover {
+    transform: translateY(-5px) scale(1.05);
+    box-shadow: 0 15px 40px rgba(181, 149, 90, 0.5);
+    background: linear-gradient(135deg, #fff, var(--accent-color));
+}
+
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
+    40% {transform: translateY(-10px);}
+    60% {transform: translateY(-5px);}
+}
+
 .hero h1 {
     font-size: clamp(2.5rem, 12vw, 5.5rem);
     font-weight: 900;
