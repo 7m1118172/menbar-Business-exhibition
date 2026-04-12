@@ -8,198 +8,85 @@
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
-        .admin-wrapper {
-            max-width: 1200px;
-            margin: 120px auto;
-            display: grid;
-            grid-template-columns: 280px 1fr;
-            gap: 2rem;
-            padding: 0 5%;
-        }
-
-        .admin-sidebar {
-            background: var(--card-bg);
-            padding: 2rem;
-            border-radius: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            height: fit-content;
-            position: sticky;
-            top: 120px;
-        }
-
-        .side-btn {
-            display: block;
-            width: 100%;
-            padding: 1rem;
-            margin-bottom: 1rem;
-            background: transparent;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            color: #fff;
-            border-radius: 10px;
-            cursor: pointer;
-            text-align: right;
-            transition: all 0.3s ease;
-            font-family: inherit;
-        }
-
-        .side-btn.active, .side-btn:hover {
-            background: var(--accent-color);
-            color: #000;
-        }
-
-        .admin-main {
-            background: var(--card-bg);
-            padding: 2.5rem;
-            border-radius: 20px;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .admin-section {
-            display: none;
-        }
-
-        .admin-section.active {
-            display: block;
-        }
-
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 0.8rem;
-            color: var(--accent-color);
-        }
-
-        input, select {
-            width: 100%;
-            padding: 1rem;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            color: #fff;
-            border-radius: 10px;
-            font-family: inherit;
-        }
-
-        .btn-action {
-            background: var(--accent-color);
-            color: #000;
-            border: none;
-            padding: 1rem 2rem;
-            border-radius: 10px;
-            cursor: pointer;
-            font-weight: bold;
-            width: 100%;
-            margin-top: 1rem;
-        }
-
-        .image-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 1rem;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-        }
-
-        .image-item img {
-            height: 50px;
-            width: 50px;
-            object-fit: cover;
-            border-radius: 5px;
-        }
-
-        #admin-login-modal {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: var(--bg-color);
-            z-index: 2000;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
+        .admin-wrapper { max-width: 1200px; margin: 120px auto; display: grid; grid-template-columns: 280px 1fr; gap: 2rem; padding: 0 5%; }
+        .admin-sidebar { background: var(--card-bg); padding: 2rem; border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.1); height: fit-content; position: sticky; top: 120px; }
+        .side-btn { display: block; width: 100%; padding: 1rem; margin-bottom: 0.5rem; background: transparent; border: 1px solid rgba(255, 255, 255, 0.05); color: #fff; border-radius: 10px; cursor: pointer; text-align: right; transition: 0.3s; font-family: inherit; }
+        .side-btn.active, .side-btn:hover { background: var(--accent-color); color: #000; }
+        .admin-main { background: var(--card-bg); padding: 2.5rem; border-radius: 20px; backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        .admin-section { display: none; }
+        .admin-section.active { display: block; }
+        .form-group { margin-bottom: 1.5rem; }
+        label { display: block; margin-bottom: 0.8rem; color: var(--accent-color); }
+        input, select { width: 100%; padding: 1rem; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); color: #fff; border-radius: 10px; font-family: inherit; }
+        .btn-action { background: var(--accent-color); color: #000; border: none; padding: 1rem 2rem; border-radius: 10px; cursor: pointer; font-weight: bold; width: 100%; margin-top: 1rem; }
+        .image-item { display: flex; align-items: center; justify-content: space-between; padding: 1rem; border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
+        .image-item img { height: 60px; width: 60px; object-fit: cover; border-radius: 8px; }
+        .local-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 1rem; margin: 1.5rem 0; }
+        .local-item { position: relative; cursor: pointer; border-radius: 10px; overflow: hidden; border: 2px solid transparent; }
+        .local-item.selected { border-color: var(--accent-color); }
+        .local-item img { width: 100%; height: 140px; object-fit: cover; }
+        #admin-login-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-color); z-index: 2000; display: flex; justify-content: center; align-items: center; }
     </style>
 </head>
 <body>
-    <div class="bg-pattern" style="opacity: 0.05;"></div>
-
     <div id="admin-login-modal">
         <div class="login-box">
-             <img src="https://github.com/7m1118172/logo-menbar-and-font/raw/main/%D9%84%D9%88%D8%AC%D9%88%20%D8%A8%D8%AF%D9%88%D9%86%20%D8%AE%D9%84%D9%81%D9%8I%D8%A9.png" style="height: 100px; margin-bottom: 2rem;">
-            <h2 style="margin-bottom: 1rem;">تسجيل الدخول</h2>
+            <img src="https://github.com/7m1118172/logo-menbar-and-font/raw/main/%D9%84%D9%88%D8%AC%D9%88%20%D8%A8%D8%AF%D9%88%D9%86%20%D8%AE%D9%84%D9%81%D9%8I%D8%A9.png" style="height: 100px; margin-bottom: 1rem;">
+            <h2>دخول المشرف</h2>
             <input type="password" id="admin-pass" placeholder="كلمة المرور">
             <button class="btn-action" onclick="checkPass()">دخول</button>
         </div>
     </div>
 
     <header>
-        <div class="logo-container">
-            <img src="https://github.com/7m1118172/logo-menbar-and-font/raw/main/%D9%84%D9%88%D8%AC%D9%88%20%D8%A8%D8%AF%D9%88%D9%86%20%D8%AE%D9%84%D9%81%D9%8A%D8%A9.png" alt="منبر">
-        </div>
-        <div style="font-weight: bold; color: var(--accent-color);">لوحة الإدارة</div>
+        <div class="logo-container"><img src="https://github.com/7m1118172/logo-menbar-and-font/raw/main/%D9%84%D9%88%D8%AC%D9%88%20%D8%A8%D8%AF%D9%88%D9%86%20%D8%AE%D9%84%D9%81%D9%8A%D8%A9.png"></div>
+        <div style="color: var(--accent-color); font-weight: bold;">منظومة منبر المتكاملة</div>
     </header>
 
     <div class="admin-wrapper" id="admin-content" style="display: none;">
         <div class="admin-sidebar">
-            <button class="side-btn active" onclick="showSection('upload')"><i class="fas fa-link"></i> إضافة فردية</button>
-            <button class="side-btn" onclick="showSection('github')"><i class="fab fa-github"></i> استيراد من جيت هاب</button>
+            <button class="side-btn active" onclick="showSection('local')"><i class="fas fa-folder-open"></i> صور الاستضافة (جديد)</button>
+            <button class="side-btn" onclick="showSection('upload')"><i class="fas fa-link"></i> إضافة برابط خارجي</button>
             <button class="side-btn" onclick="showSection('social')"><i class="fas fa-cog"></i> الإعدادات</button>
-            <button class="side-btn" onclick="showSection('backup')"><i class="fas fa-database"></i> نسخة الملف الاحتياطية</button>
             <button class="side-btn" onclick="location.reload()"><i class="fas fa-sign-out-alt"></i> خروج</button>
         </div>
 
         <div class="admin-main">
-            <div id="section-upload" class="admin-section active">
-                <h2>إضافة تصميم</h2>
-                <div class="form-group"><label>رابط الصورة</label><input type="text" id="img-url"></div>
-                <div class="form-group"><label>القسم</label><select id="img-category">
-                    <option value="khutaba">الخطابة الحسينية</option>
-                    <option value="mawakib">المواكب والعزاء</option>
-                    <option value="mawalid">المواليد والأفراح</option>
-                    <option value="other">أخرى</option>
-                </select></div>
+            <!-- Local Hosting Section -->
+            <div id="section-local" class="admin-section active">
+                <h2>الصور الموجودة في مجلد uploads</h2>
+                <p style="color: var(--text-secondary); margin-bottom: 1rem;">اختر الصور التي رفعتها للمجلد ثم حدد قسمها لإضافتها للمعرض.</p>
+                <button class="btn-action" style="width: auto; padding: 0.5rem 1rem; margin-bottom: 1rem;" onclick="scanLocalFiles()">تحديث القائمة</button>
+                
+                <div id="local-files-grid" class="local-grid"></div>
+
+                <div class="bulk-actions-bar" id="local-actions" style="display:none;">
+                    <select id="local-category" style="width: auto;"><option value="khutaba">الخطابة الحسينية</option><option value="mawakib">المواكب والعزاء</option><option value="mawalid">المواليد والأفراح</option><option value="other">أخرى</option></select>
+                    <button class="btn-action" style="width: auto; margin:0;" onclick="saveLocalSelection()">إضافة المختار (<span id="local-count">0</span>)</button>
+                </div>
+            </div>
+
+            <!-- Single Upload -->
+            <div id="section-upload" class="admin-section">
+                <h2>إضافة برابط مباشر</h2>
+                <div class="form-group"><label>الرابط</label><input type="text" id="img-url"></div>
+                <div class="form-group"><label>القسم</label><select id="single-category"><option value="khutaba">خطابة</option><option value="mawakib">عزاء</option><option value="mawalid">مواليد</option><option value="other">أخرى</option></select></div>
                 <button class="btn-action" onclick="addImage()">حفظ</button>
                 <div id="admin-images-list" class="image-list"></div>
             </div>
 
-            <div id="section-github" class="admin-section">
-                <h2>الاستيراد الذكي</h2>
-                <div class="form-group"><label>رابط Repo</label><input type="text" id="github-url" placeholder="https://github.com/USER/REPO"></div>
-                <button class="btn-action" onclick="fetchGitHubRepo()">جلب الصور</button>
-                <div id="github-loading" style="display:none; text-align:center; margin:2rem;"><i class="fas fa-spinner fa-spin fa-2x"></i></div>
-                <div id="github-results" style="display:none;">
-                    <div style="display:flex; justify-content:space-between; margin-top:2rem;">
-                        <h3>الصور المكتشفة (<span id="count-found">0</span>)</h3>
-                        <button onclick="toggleSelectAll()">تحديد الكل</button>
-                    </div>
-                    <div id="github-images-grid" class="bulk-grid"></div>
-                    <div class="bulk-actions-bar">
-                        <select id="bulk-category"><option value="khutaba">الخطابة الحسينية</option><option value="mawakib">المواكب والعزاء</option><option value="mawalid">المواليد والأفراح</option><option value="other">أخرى</option></select>
-                        <button class="btn-action" style="margin:0; width:auto;" onclick="saveBulkImages()">حفظ المختار (<span id="count-selected">0</span>)</button>
-                    </div>
-                </div>
-            </div>
-
+            <!-- Settings -->
             <div id="section-social" class="admin-section">
                 <h2>الإعدادات</h2>
                 <div class="form-group"><label>انستقرام</label><input type="text" id="social-insta"></div>
                 <div class="form-group"><label>واتساب</label><input type="text" id="social-wa"></div>
                 <button class="btn-action" onclick="saveSocial()">حفظ</button>
             </div>
-
-            <div id="section-backup" class="admin-section">
-                <h2>نسخة البيانات (للحفظ في جيت هاب)</h2>
-                <p style="color: #ffaa00; margin-bottom: 1rem;"><i class="fas fa-exclamation-triangle"></i> انسخ هذا الكود وضعه في ملف <b>data.json</b> في جهازك ثم ارفعه على جيت هاب لضمان عدم ضياع الصور.</p>
-                <textarea id="backup-area" style="width: 100%; height: 300px; background: rgba(0,0,0,0.5); color: #0f0; font-family: monospace; padding: 10px; border-radius: 10px; border: 1px solid var(--accent-color);"></textarea>
-                <button class="btn-action" onclick="copyBackup()">نسخ الكود</button>
-            </div>
         </div>
     </div>
 
     <script>
-        let fetchedImages = [];
-        let selectedIndices = new Set();
+        let selectedLocalFiles = new Set();
 
         function checkPass() {
             if (document.getElementById('admin-pass').value === '123123') {
@@ -214,6 +101,7 @@
             document.getElementById('section-' + id).classList.add('active');
             document.querySelectorAll('.side-btn').forEach(b => b.classList.remove('active'));
             event.currentTarget.classList.add('active');
+            if(id === 'local') scanLocalFiles();
         }
 
         async function initAdmin() {
@@ -222,72 +110,49 @@
             loadAdminList(data.images);
             document.getElementById('social-insta').value = data.social.insta;
             document.getElementById('social-wa').value = data.social.wa;
-            document.getElementById('backup-area').value = JSON.stringify(data, null, 2);
+            scanLocalFiles();
         }
 
-        function copyBackup() {
-            const area = document.getElementById('backup-area');
-            area.select();
-            document.execCommand('copy');
-            alert('تم نسخ الكود! الآن ضعه في ملف data.json وارفعه على جيت هاب لضمان ثبات الصور.');
-        }
+        async function scanLocalFiles() {
+            const res = await fetch('/api/scan-uploads');
+            const files = await res.json();
+            const grid = document.getElementById('local-files-grid');
+            grid.innerHTML = '';
+            selectedLocalFiles.clear();
+            updateLocalCount();
 
-        async function fetchGitHubRepo() {
-            const url = document.getElementById('github-url').value;
-            if (!url) return;
-            const regex = /github\.com\/([^\/]+)\/([^\/]+)/;
-            const match = url.replace('.git', '').match(regex);
-            if (!match) return alert('الرابط خطأ');
-
-            document.getElementById('github-loading').style.display = 'block';
-            try {
-                const res = await fetch(`https://api.github.com/repos/${match[1]}/${match[2]}/contents`);
-                const contents = await res.json();
-                fetchedImages = contents.filter(i => i.type === 'file' && ['png', 'jpg', 'jpeg', 'webp'].includes(i.name.split('.').pop().toLowerCase())).map(i => i.download_url);
-                renderGitHubGrid();
-            } catch (e) { alert('فشل الجلب'); }
-            finally { document.getElementById('github-loading').style.display = 'none'; }
-        }
-
-        function renderGitHubGrid() {
-            const grid = document.getElementById('github-images-grid');
-            grid.innerHTML = ''; selectedIndices.clear();
-            fetchedImages.forEach((url, i) => {
+            files.forEach(file => {
                 const div = document.createElement('div');
-                div.className = 'bulk-item';
+                div.className = 'local-item';
                 div.onclick = () => {
-                    if(selectedIndices.has(i)) { selectedIndices.delete(i); div.classList.remove('selected'); }
-                    else { selectedIndices.add(i); div.classList.add('selected'); }
-                    updateSelectionCount();
+                    if(selectedLocalFiles.has(file)) { selectedLocalFiles.delete(file); div.classList.remove('selected'); }
+                    else { selectedLocalFiles.add(file); div.classList.add('selected'); }
+                    updateLocalCount();
                 };
-                div.innerHTML = `<div class="bulk-checkbox"></div><img src="${url}" loading="lazy">`;
+                div.innerHTML = `<img src="/uploads/${file}">`;
                 grid.appendChild(div);
             });
-            document.getElementById('github-results').style.display = 'block';
-            document.getElementById('count-found').innerText = fetchedImages.length;
-            updateSelectionCount();
+            document.getElementById('local-actions').style.display = files.length > 0 ? 'flex' : 'none';
         }
 
-        function updateSelectionCount() { document.getElementById('count-selected').innerText = selectedIndices.size; }
-
-        function toggleSelectAll() {
-            const items = document.querySelectorAll('.bulk-item');
-            if(selectedIndices.size === fetchedImages.length) { selectedIndices.clear(); items.forEach(i => i.classList.remove('selected')); }
-            else { fetchedImages.forEach((_, i) => selectedIndices.add(i)); items.forEach(i => i.classList.add('selected')); }
-            updateSelectionCount();
+        function updateLocalCount() {
+            document.getElementById('local-count').innerText = selectedLocalFiles.size;
         }
 
-        async function saveBulkImages() {
-            const cat = document.getElementById('bulk-category').value;
-            const images = Array.from(selectedIndices).map(i => ({ url: fetchedImages[i], category: cat }));
+        async function saveLocalSelection() {
+            if(selectedLocalFiles.size === 0) return;
+            const cat = document.getElementById('local-category').value;
+            const images = Array.from(selectedLocalFiles).map(file => ({ url: `/uploads/${file}`, category: cat }));
+            
             await fetch('/api/images/bulk', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ images }) });
-            alert('تم الحفظ'); location.reload();
+            alert('تمت إضافة الصور بنجاح');
+            location.reload();
         }
 
         async function addImage() {
             const url = document.getElementById('img-url').value;
-            const cat = document.getElementById('img-category').value;
-            await fetch('/api/images', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ url, category: cat }) });
+            const category = document.getElementById('single-category').value;
+            await fetch('/api/images', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ url, category }) });
             initAdmin();
         }
 
@@ -302,7 +167,7 @@
             });
         }
 
-        async function deleteImage(id) { 
+        async function deleteImage(id) {
             if(confirm('حذف؟')) { await fetch(`/api/images/${id}`, { method: 'DELETE' }); initAdmin(); }
         }
 
