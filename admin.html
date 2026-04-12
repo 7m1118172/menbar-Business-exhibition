@@ -124,12 +124,13 @@
             files.forEach(file => {
                 const div = document.createElement('div');
                 div.className = 'local-item';
+                const displayPath = file.startsWith('/') ? file : '/' + file;
                 div.onclick = () => {
-                    if(selectedLocalFiles.has(file)) { selectedLocalFiles.delete(file); div.classList.remove('selected'); }
-                    else { selectedLocalFiles.add(file); div.classList.add('selected'); }
+                    if(selectedLocalFiles.has(displayPath)) { selectedLocalFiles.delete(displayPath); div.classList.remove('selected'); }
+                    else { selectedLocalFiles.add(displayPath); div.classList.add('selected'); }
                     updateLocalCount();
                 };
-                div.innerHTML = `<img src="/uploads/${file}">`;
+                div.innerHTML = `<img src="${displayPath}">`;
                 grid.appendChild(div);
             });
             document.getElementById('local-actions').style.display = files.length > 0 ? 'flex' : 'none';
@@ -142,7 +143,7 @@
         async function saveLocalSelection() {
             if(selectedLocalFiles.size === 0) return;
             const cat = document.getElementById('local-category').value;
-            const images = Array.from(selectedLocalFiles).map(file => ({ url: `/uploads/${file}`, category: cat }));
+            const images = Array.from(selectedLocalFiles).map(path => ({ url: path, category: cat }));
             
             await fetch('/api/images/bulk', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ images }) });
             alert('تمت إضافة الصور بنجاح');

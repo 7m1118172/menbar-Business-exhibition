@@ -8,15 +8,16 @@ const PORT = process.env.PORT || 3000;
 const DATA_FILE = path.join(__dirname, 'data.json');
 const UPLOADS_DIR = path.join(__dirname, 'uploads');
 
-// Ensure directories and files exist
-if (!fs.existsSync(UPLOADS_DIR)) fs.mkdirSync(UPLOADS_DIR);
+// Ensure data file exists
 if (!fs.existsSync(DATA_FILE)) {
     fs.writeFileSync(DATA_FILE, JSON.stringify({ images: [], social: { insta: 'https://www.instagram.com/menbar.313/', wa: '97332115623' } }));
 }
 
 app.use(bodyParser.json());
 app.use(express.static(path.join(__dirname)));
-app.use('/uploads', express.static(UPLOADS_DIR));
+if (fs.existsSync(UPLOADS_DIR)) {
+    app.use('/uploads', express.static(UPLOADS_DIR));
+}
 
 // API: Get all data
 app.get('/api/data', (req, res) => {
@@ -24,20 +25,31 @@ app.get('/api/data', (req, res) => {
     res.json(data);
 });
 
-// API: Scan uploads folder for unassigned images
+// API: Scan for images in both root and uploads
 app.get('/api/scan-uploads', (req, res) => {
-    const files = fs.readdirSync(UPLOADS_DIR).filter(file => 
-        ['.png', '.jpg', '.jpeg', '.webp'].includes(path.extname(file).toLowerCase())
-    );
-    res.json(files);
-});
-
-// API: Add image
-app.post('/api/images', (req, res) => {
-    const data = JSON.parse(fs.readFileSync(DATA_FILE));
-    data.images.push({ ...req.body, id: Date.now() });
-    fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2));
-    res.json({ success: true });
+    let allFiles = [];
+    
+    // Scan uploads folder if exists
+    if (fs.existsSync(UPLOADS_DIR)) {
+        const files = fs.readdirSync(UPLOADS_DIR)
+            .filter(file => ['.png', '.jpg', '.jpeg', '.webp'].includes(path.extname(file).toLowerCase()))
+            .map(file => `uploads/${file}`);
+        allFiles.push(...files);
+    }
+    
+    // Scan root folder (excluding known system files)
+    const rootFiles = fs.readdirSync(__dirname)
+        .filter(file => {
+            const ext = path.extname(file).toLowerCase();
+            const isImage = ['.png', '.jpg', '.jpeg', '.webp'].includes(ext);
+            const isSystem = ['logo.png', 'pattern.png'].includes(file.toLowerCase());
+            return isImage && !isSystem;
+        })
+        .map(file => file);
+    
+    allFiles.push(...rootFiles);
+    
+    res.json(allFiles);
 });
 
 // API: Bulk add images
@@ -64,9 +76,6 @@ app.post('/api/social', (req, res) => {
     fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2));
     res.json({ success: true });
 });
-
-app.get('/admin', (req, res) => res.sendFile(path.join(__dirname, 'admin.html')));
-app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'index.html')));
 
 app.listen(PORT, () => {
     console.log(`🚀 Server running on port ${PORT}`);
