@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة التحكم | منبر</title>
+    <link rel="stylesheet" href="fonts.css">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        .admin-wrapper {
+            max-width: 1000px;
+            margin: 120px auto;
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: 2rem;
+            padding: 0 5%;
+        }
+
+        .admin-sidebar {
+            background: var(--card-bg);
+            padding: 2rem;
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            height: fit-content;
+        }
+
+        .side-btn {
+            display: block;
+            width: 100%;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            color: #fff;
+            border-radius: 10px;
+            cursor: pointer;
+            text-align: right;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        .side-btn.active, .side-btn:hover {
+            background: var(--accent-color);
+            color: #000;
+        }
+
+        .admin-main {
+            background: var(--card-bg);
+            padding: 3rem;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .admin-section {
+            display: none;
+        }
+
+        .admin-section.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.8rem;
+            font-weight: 500;
+            color: var(--accent-color);
+        }
+
+        input, select {
+            width: 100%;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #fff;
+            border-radius: 10px;
+            font-family: inherit;
+        }
+
+        .btn-action {
+            background: var(--accent-color);
+            color: #000;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
+            width: 100%;
+            font-size: 1.1rem;
+            margin-top: 1rem;
+        }
+
+        .image-list {
+            margin-top: 3rem;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        .image-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            background: rgba(255,255,255,0.02);
+            margin-bottom: 0.5rem;
+            border-radius: 10px;
+        }
+
+        .image-item img {
+            height: 50px;
+            width: 50px;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+
+        .btn-delete {
+            background: rgba(255, 68, 68, 0.2);
+            border: 1px solid #ff4444;
+            color: #ff4444;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-delete:hover {
+            background: #ff4444;
+            color: #fff;
+        }
+
+        #admin-login-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--bg-color);
+            z-index: 2000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        @media (max-width: 768px) {
+            .admin-wrapper {
+                grid-template-columns: 1fr;
+                margin-top: 80px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-pattern" style="opacity: 0.05;"></div>
+
+    <div id="admin-login-modal">
+        <div class="login-box">
+            <img src="https://github.com/7m1118172/logo-menbar-and-font/raw/main/%D9%84%D9%88%D8%AC%D9%88%20%D8%A8%D8%AF%D9%88%D9%86%20%D8%AE%D9%84%D9%81%D9%8I%D8%A9.png" style="height: 100px; margin-bottom: 2rem;">
+            <h2 style="margin-bottom: 1rem;">لوحة إدارة منبر</h2>
+            <input type="password" id="admin-pass" placeholder="كلمة المرور">
+            <button class="btn-action" onclick="checkPass()">دخول</button>
+            <p id="login-error" style="color: #ff4444; margin-top: 1rem; display: none;">كلمة المرور غير صحيحة</p>
+        </div>
+    </div>
+
+    <header>
+        <div class="logo-container">
+            <img src="https://github.com/7m1118172/logo-menbar-and-font/raw/main/%D9%84%D9%88%D8%AC%D9%88%20%D8%A8%D8%AF%D9%88%D9%86%20%D8%AE%D9%84%D9%81%D9%8A%D8%A9.png" alt="منبر">
+        </div>
+        <div style="font-weight: bold; color: var(--accent-color);">الإدارة المتكاملة</div>
+    </header>
+
+    <div class="admin-wrapper" id="admin-content" style="display: none;">
+        <div class="admin-sidebar">
+            <button class="side-btn active" onclick="showSection('upload')"><i class="fas fa-plus-circle"></i> إضافة عمل</button>
+            <button class="side-btn" onclick="showSection('social')"><i class="fas fa-share-alt"></i> الروابط الاجتماعية</button>
+            <button class="side-btn" onclick="logout()"><i class="fas fa-sign-out-alt"></i> خروج</button>
+        </div>
+
+        <div class="admin-main">
+            <!-- Upload Section -->
+            <div id="section-upload" class="admin-section active">
+                <h2 style="margin-bottom: 2rem;">إضافة تصميم جديد</h2>
+                <div class="form-group">
+                    <label>رابط الصورة</label>
+                    <input type="text" id="img-url" placeholder="ضع رابط الصورة هنا...">
+                </div>
+                <div class="form-group">
+                    <label>القسم</label>
+                    <select id="img-category">
+                        <option value="khutaba">الخطابة الحسينية (وفيات)</option>
+                        <option value="mawakib">المواكب والعزاء (وفيات)</option>
+                        <option value="mawalid">المواليد والأفراح</option>
+                        <option value="other">أخرى</option>
+                    </select>
+                </div>
+                <button class="btn-action" onclick="addImage()">حفظ في المعرض</button>
+
+                <div class="image-list">
+                    <h3>الأعمال المرفوعة حالياً</h3>
+                    <div id="admin-images-list"></div>
+                </div>
+            </div>
+
+            <!-- Social Section -->
+            <div id="section-social" class="admin-section">
+                <h2 style="margin-bottom: 2rem;">تعديل روابط التواصل</h2>
+                <div class="form-group">
+                    <label><i class="fab fa-instagram"></i> رابط الانستقرام</label>
+                    <input type="text" id="social-insta" placeholder="https://instagram.com/...">
+                </div>
+                <div class="form-group">
+                    <label><i class="fab fa-whatsapp"></i> رقم الواتساب</label>
+                    <input type="text" id="social-wa" placeholder="97332115623">
+                    <small style="color: var(--text-secondary);">اكتب الرقم مع رمز الدولة بدون (+) أو (00)</small>
+                </div>
+                <button class="btn-action" onclick="saveSocial()">حفظ التعديلات</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function checkPass() {
+            const pass = document.getElementById('admin-pass').value;
+            if (pass === '123123') {
+                document.getElementById('admin-login-modal').style.display = 'none';
+                document.getElementById('admin-content').style.display = 'grid';
+                initAdmin();
+            } else {
+                document.getElementById('login-error').style.display = 'block';
+            }
+        }
+
+        function showSection(id) {
+            document.querySelectorAll('.admin-section').forEach(s => s.classList.remove('active'));
+            document.getElementById('section-' + id).classList.add('active');
+            
+            document.querySelectorAll('.side-btn').forEach(b => b.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+        }
+
+        function initAdmin() {
+            loadAdminList();
+            loadSocialInputs();
+        }
+
+        function loadSocialInputs() {
+            const links = JSON.parse(localStorage.getItem('menbar_social')) || {
+                insta: 'https://www.instagram.com/menbar.313/',
+                wa: '97332115623'
+            };
+            document.getElementById('social-insta').value = links.insta;
+            document.getElementById('social-wa').value = links.wa;
+        }
+
+        function saveSocial() {
+            const links = {
+                insta: document.getElementById('social-insta').value,
+                wa: document.getElementById('social-wa').value
+            };
+            localStorage.setItem('menbar_social', JSON.stringify(links));
+            alert('تم حفظ الروابط بنجاح');
+        }
+
+        function addImage() {
+            const url = document.getElementById('img-url').value;
+            const category = document.getElementById('img-category').value;
+            if (!url) { alert('يرجى وضع رابط الصورة'); return; }
+
+            const images = JSON.parse(localStorage.getItem('menbar_images')) || [];
+            images.push({ url, category, id: Date.now() });
+            localStorage.setItem('menbar_images', JSON.stringify(images));
+            document.getElementById('img-url').value = '';
+            loadAdminList();
+            alert('تمت الإضافة بنجاح');
+        }
+
+        function loadAdminList() {
+            const list = document.getElementById('admin-images-list');
+            const images = JSON.parse(localStorage.getItem('menbar_images')) || [];
+            list.innerHTML = '';
+            images.reverse().forEach(img => {
+                const item = document.createElement('div');
+                item.className = 'image-item';
+                item.innerHTML = `
+                    <div style="display: flex; align-items: center; gap: 1rem;">
+                        <img src="${img.url}">
+                        <div><div style="font-size: 0.9rem;">${getCategoryName(img.category)}</div></div>
+                    </div>
+                    <button class="btn-delete" onclick="deleteImage(${img.id})">حذف</button>
+                `;
+                list.appendChild(item);
+            });
+        }
+
+        function getCategoryName(cat) {
+            const names = {'khutaba': 'خطابة حسينية', 'mawakib': 'مواكب وعزاء', 'mawalid': 'مواليد وأفراح', 'other': 'أخرى'};
+            return names[cat] || cat;
+        }
+
+        function deleteImage(id) {
+            if (confirm('هل أنت متأكد؟')) {
+                let images = JSON.parse(localStorage.getItem('menbar_images')) || [];
+                images = images.filter(img => img.id !== id);
+                localStorage.setItem('menbar_images', JSON.stringify(images));
+                loadAdminList();
+            }
+        }
+
+        function logout() { location.reload(); }
+    </script>
+</body>
+</html>

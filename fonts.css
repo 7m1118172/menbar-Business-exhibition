@@ -1,0 +1,47 @@
+@font-face {
+    font-family: 'Asal Arabic';
+    src: url('asal/Asal Arabic ITF Regular.otf') format('opentype');
+    font-weight: 400;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Asal Arabic';
+    src: url('asal/Asal Arabic ITF light.otf') format('opentype');
+    font-weight: 300;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Asal Arabic';
+    src: url('asal/Asal Arabic ITF Medium.otf') format('opentype');
+    font-weight: 500;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Asal Arabic';
+    src: url('asal/Asal Arabic ITF Bold.otf') format('opentype');
+    font-weight: 700;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Asal Arabic';
+    src: url('asal/Asal Arabic ITF Extra Bold.otf') format('opentype');
+    font-weight: 800;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Asal Arabic';
+    src: url('asal/Asal Arabic ITF Black.otf') format('opentype');
+    font-weight: 900;
+    font-style: normal;
+}
+
+/* تفعيل ميزات الخط المتقدمة (الربط والبدائل الحرفية) التي تظهر في إليستريتور */
+body {
+    font-feature-settings: "ss01" on, "ss02" on, "ss03" on, "liga" on, "dlig" on;
+    font-variant-ligatures: discretionary-ligatures;
+}
