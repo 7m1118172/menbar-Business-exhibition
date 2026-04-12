@@ -9,10 +9,10 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
         .admin-wrapper {
-            max-width: 1000px;
+            max-width: 1200px;
             margin: 120px auto;
             display: grid;
-            grid-template-columns: 250px 1fr;
+            grid-template-columns: 280px 1fr;
             gap: 2rem;
             padding: 0 5%;
         }
@@ -23,6 +23,8 @@
             border-radius: 20px;
             border: 1px solid rgba(255, 255, 255, 0.1);
             height: fit-content;
+            position: sticky;
+            top: 120px;
         }
 
         .side-btn {
@@ -47,7 +49,7 @@
 
         .admin-main {
             background: var(--card-bg);
-            padding: 3rem;
+            padding: 2.5rem;
             border-radius: 20px;
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.1);
@@ -68,7 +70,6 @@
         label {
             display: block;
             margin-bottom: 0.8rem;
-            font-weight: 500;
             color: var(--accent-color);
         }
 
@@ -91,14 +92,7 @@
             cursor: pointer;
             font-weight: bold;
             width: 100%;
-            font-size: 1.1rem;
             margin-top: 1rem;
-        }
-
-        .image-list {
-            margin-top: 3rem;
-            max-height: 500px;
-            overflow-y: auto;
         }
 
         .image-item {
@@ -107,9 +101,6 @@
             justify-content: space-between;
             padding: 1rem;
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-            background: rgba(255,255,255,0.02);
-            margin-bottom: 0.5rem;
-            border-radius: 10px;
         }
 
         .image-item img {
@@ -119,39 +110,14 @@
             border-radius: 5px;
         }
 
-        .btn-delete {
-            background: rgba(255, 68, 68, 0.2);
-            border: 1px solid #ff4444;
-            color: #ff4444;
-            padding: 0.5rem 1rem;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .btn-delete:hover {
-            background: #ff4444;
-            color: #fff;
-        }
-
         #admin-login-modal {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            top: 0; left: 0; width: 100%; height: 100%;
             background: var(--bg-color);
             z-index: 2000;
             display: flex;
             justify-content: center;
             align-items: center;
-        }
-
-        @media (max-width: 768px) {
-            .admin-wrapper {
-                grid-template-columns: 1fr;
-                margin-top: 80px;
-            }
         }
     </style>
 </head>
@@ -160,11 +126,10 @@
 
     <div id="admin-login-modal">
         <div class="login-box">
-            <img src="https://github.com/7m1118172/logo-menbar-and-font/raw/main/%D9%84%D9%88%D8%AC%D9%88%20%D8%A8%D8%AF%D9%88%D9%86%20%D8%AE%D9%84%D9%81%D9%8I%D8%A9.png" style="height: 100px; margin-bottom: 2rem;">
-            <h2 style="margin-bottom: 1rem;">لوحة إدارة منبر</h2>
+             <img src="https://github.com/7m1118172/logo-menbar-and-font/raw/main/%D9%84%D9%88%D8%AC%D9%88%20%D8%A8%D8%AF%D9%88%D9%86%20%D8%AE%D9%84%D9%81%D9%8I%D8%A9.png" style="height: 100px; margin-bottom: 2rem;">
+            <h2 style="margin-bottom: 1rem;">تسجيل الدخول</h2>
             <input type="password" id="admin-pass" placeholder="كلمة المرور">
             <button class="btn-action" onclick="checkPass()">دخول</button>
-            <p id="login-error" style="color: #ff4444; margin-top: 1rem; display: none;">كلمة المرور غير صحيحة</p>
         </div>
     </div>
 
@@ -172,154 +137,164 @@
         <div class="logo-container">
             <img src="https://github.com/7m1118172/logo-menbar-and-font/raw/main/%D9%84%D9%88%D8%AC%D9%88%20%D8%A8%D8%AF%D9%88%D9%86%20%D8%AE%D9%84%D9%81%D9%8A%D8%A9.png" alt="منبر">
         </div>
-        <div style="font-weight: bold; color: var(--accent-color);">الإدارة المتكاملة</div>
+        <div style="font-weight: bold; color: var(--accent-color);">لوحة الإدارة</div>
     </header>
 
     <div class="admin-wrapper" id="admin-content" style="display: none;">
         <div class="admin-sidebar">
-            <button class="side-btn active" onclick="showSection('upload')"><i class="fas fa-plus-circle"></i> إضافة عمل</button>
-            <button class="side-btn" onclick="showSection('social')"><i class="fas fa-share-alt"></i> الروابط الاجتماعية</button>
-            <button class="side-btn" onclick="logout()"><i class="fas fa-sign-out-alt"></i> خروج</button>
+            <button class="side-btn active" onclick="showSection('upload')"><i class="fas fa-plus"></i> إضافة مفردة</button>
+            <button class="side-btn" onclick="showSection('github')"><i class="fab fa-github"></i> استيراد من جيت هاب</button>
+            <button class="side-btn" onclick="showSection('social')"><i class="fas fa-cog"></i> الإعدادات</button>
+            <button class="side-btn" onclick="location.reload()"><i class="fas fa-sign-out-alt"></i> خروج</button>
         </div>
 
         <div class="admin-main">
-            <!-- Upload Section -->
             <div id="section-upload" class="admin-section active">
-                <h2 style="margin-bottom: 2rem;">إضافة تصميم جديد</h2>
-                <div class="form-group">
-                    <label>رابط الصورة</label>
-                    <input type="text" id="img-url" placeholder="ضع رابط الصورة هنا...">
-                </div>
-                <div class="form-group">
-                    <label>القسم</label>
-                    <select id="img-category">
-                        <option value="khutaba">الخطابة الحسينية (وفيات)</option>
-                        <option value="mawakib">المواكب والعزاء (وفيات)</option>
-                        <option value="mawalid">المواليد والأفراح</option>
-                        <option value="other">أخرى</option>
-                    </select>
-                </div>
-                <button class="btn-action" onclick="addImage()">حفظ في المعرض</button>
+                <h2>إضافة تصميم</h2>
+                <div class="form-group"><label>رابط الصورة</label><input type="text" id="img-url"></div>
+                <div class="form-group"><label>القسم</label><select id="img-category">
+                    <option value="khutaba">الخطابة الحسينية</option>
+                    <option value="mawakib">المواكب والعزاء</option>
+                    <option value="mawalid">المواليد والأفراح</option>
+                    <option value="other">أخرى</option>
+                </select></div>
+                <button class="btn-action" onclick="addImage()">حفظ</button>
+                <div id="admin-images-list" class="image-list"></div>
+            </div>
 
-                <div class="image-list">
-                    <h3>الأعمال المرفوعة حالياً</h3>
-                    <div id="admin-images-list"></div>
+            <div id="section-github" class="admin-section">
+                <h2>الاستيراد الذكي</h2>
+                <div class="form-group"><label>رابط Repo</label><input type="text" id="github-url" placeholder="https://github.com/USER/REPO"></div>
+                <button class="btn-action" onclick="fetchGitHubRepo()">جلب الصور</button>
+                <div id="github-loading" style="display:none; text-align:center; margin:2rem;"><i class="fas fa-spinner fa-spin fa-2x"></i></div>
+                <div id="github-results" style="display:none;">
+                    <div style="display:flex; justify-content:space-between; margin-top:2rem;">
+                        <h3>الصور المكتشفة (<span id="count-found">0</span>)</h3>
+                        <button onclick="toggleSelectAll()">تحديد الكل</button>
+                    </div>
+                    <div id="github-images-grid" class="bulk-grid"></div>
+                    <div class="bulk-actions-bar">
+                        <select id="bulk-category"><option value="khutaba">الخطابة الحسينية</option><option value="mawakib">المواكب والعزاء</option><option value="mawalid">المواليد والأفراح</option><option value="other">أخرى</option></select>
+                        <button class="btn-action" style="margin:0; width:auto;" onclick="saveBulkImages()">حفظ المختار (<span id="count-selected">0</span>)</button>
+                    </div>
                 </div>
             </div>
 
-            <!-- Social Section -->
             <div id="section-social" class="admin-section">
-                <h2 style="margin-bottom: 2rem;">تعديل روابط التواصل</h2>
-                <div class="form-group">
-                    <label><i class="fab fa-instagram"></i> رابط الانستقرام</label>
-                    <input type="text" id="social-insta" placeholder="https://instagram.com/...">
-                </div>
-                <div class="form-group">
-                    <label><i class="fab fa-whatsapp"></i> رقم الواتساب</label>
-                    <input type="text" id="social-wa" placeholder="97332115623">
-                    <small style="color: var(--text-secondary);">اكتب الرقم مع رمز الدولة بدون (+) أو (00)</small>
-                </div>
-                <button class="btn-action" onclick="saveSocial()">حفظ التعديلات</button>
+                <h2>الإعدادات</h2>
+                <div class="form-group"><label>انستقرام</label><input type="text" id="social-insta"></div>
+                <div class="form-group"><label>واتساب</label><input type="text" id="social-wa"></div>
+                <button class="btn-action" onclick="saveSocial()">حفظ</button>
             </div>
         </div>
     </div>
 
     <script>
+        let fetchedImages = [];
+        let selectedIndices = new Set();
+
         function checkPass() {
-            const pass = document.getElementById('admin-pass').value;
-            if (pass === '123123') {
+            if (document.getElementById('admin-pass').value === '123123') {
                 document.getElementById('admin-login-modal').style.display = 'none';
                 document.getElementById('admin-content').style.display = 'grid';
                 initAdmin();
-            } else {
-                document.getElementById('login-error').style.display = 'block';
             }
         }
 
         function showSection(id) {
             document.querySelectorAll('.admin-section').forEach(s => s.classList.remove('active'));
-            const target = document.getElementById('section-' + id);
-            if(target) target.classList.add('active');
-            
+            document.getElementById('section-' + id).classList.add('active');
             document.querySelectorAll('.side-btn').forEach(b => b.classList.remove('active'));
             event.currentTarget.classList.add('active');
         }
 
         async function initAdmin() {
-            const response = await fetch('/api/data');
-            const data = await response.json();
-            
+            const res = await fetch('/api/data');
+            const data = await res.json();
             loadAdminList(data.images);
             document.getElementById('social-insta').value = data.social.insta;
             document.getElementById('social-wa').value = data.social.wa;
         }
 
-        async function saveSocial() {
-            const links = {
-                insta: document.getElementById('social-insta').value,
-                wa: document.getElementById('social-wa').value
-            };
-            
-            await fetch('/api/social', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(links)
+        async function fetchGitHubRepo() {
+            const url = document.getElementById('github-url').value;
+            if (!url) return;
+            const regex = /github\.com\/([^\/]+)\/([^\/]+)/;
+            const match = url.replace('.git', '').match(regex);
+            if (!match) return alert('الرابط خطأ');
+
+            document.getElementById('github-loading').style.display = 'block';
+            try {
+                const res = await fetch(`https://api.github.com/repos/${match[1]}/${match[2]}/contents`);
+                const contents = await res.json();
+                fetchedImages = contents.filter(i => i.type === 'file' && ['png', 'jpg', 'jpeg', 'webp'].includes(i.name.split('.').pop().toLowerCase())).map(i => i.download_url);
+                renderGitHubGrid();
+            } catch (e) { alert('فشل الجلب'); }
+            finally { document.getElementById('github-loading').style.display = 'none'; }
+        }
+
+        function renderGitHubGrid() {
+            const grid = document.getElementById('github-images-grid');
+            grid.innerHTML = ''; selectedIndices.clear();
+            fetchedImages.forEach((url, i) => {
+                const div = document.createElement('div');
+                div.className = 'bulk-item';
+                div.onclick = () => {
+                    if(selectedIndices.has(i)) { selectedIndices.delete(i); div.classList.remove('selected'); }
+                    else { selectedIndices.add(i); div.classList.add('selected'); }
+                    updateSelectionCount();
+                };
+                div.innerHTML = `<div class="bulk-checkbox"></div><img src="${url}" loading="lazy">`;
+                grid.appendChild(div);
             });
-            alert('تم حفظ الروابط بنجاح');
+            document.getElementById('github-results').style.display = 'block';
+            document.getElementById('count-found').innerText = fetchedImages.length;
+            updateSelectionCount();
+        }
+
+        function updateSelectionCount() { document.getElementById('count-selected').innerText = selectedIndices.size; }
+
+        function toggleSelectAll() {
+            const items = document.querySelectorAll('.bulk-item');
+            if(selectedIndices.size === fetchedImages.length) { selectedIndices.clear(); items.forEach(i => i.classList.remove('selected')); }
+            else { fetchedImages.forEach((_, i) => selectedIndices.add(i)); items.forEach(i => i.classList.add('selected')); }
+            updateSelectionCount();
+        }
+
+        async function saveBulkImages() {
+            const cat = document.getElementById('bulk-category').value;
+            const images = Array.from(selectedIndices).map(i => ({ url: fetchedImages[i], category: cat }));
+            await fetch('/api/images/bulk', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ images }) });
+            alert('تم الحفظ'); location.reload();
         }
 
         async function addImage() {
             const url = document.getElementById('img-url').value;
-            const category = document.getElementById('img-category').value;
-            if (!url) { alert('يرجى وضع رابط الصورة'); return; }
-
-            await fetch('/api/images', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ url, category })
-            });
-            
-            document.getElementById('img-url').value = '';
-            const response = await fetch('/api/data');
-            const data = await response.json();
-            loadAdminList(data.images);
-            alert('تمت الإضافة بنجاح');
+            const cat = document.getElementById('img-category').value;
+            await fetch('/api/images', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ url, category: cat }) });
+            initAdmin();
         }
 
         function loadAdminList(images) {
             const list = document.getElementById('admin-images-list');
             list.innerHTML = '';
-            if (!images) return;
-            
-            [...images].reverse().forEach(img => {
+            images.reverse().forEach(img => {
                 const item = document.createElement('div');
                 item.className = 'image-item';
-                item.innerHTML = `
-                    <div style="display: flex; align-items: center; gap: 1rem;">
-                        <img src="${img.url}">
-                        <div><div style="font-size: 0.9rem;">${getCategoryName(img.category)}</div></div>
-                    </div>
-                    <button class="btn-delete" onclick="deleteImage(${img.id})">حذف</button>
-                `;
+                item.innerHTML = `<img src="${img.url}"><span>${img.category}</span><button onclick="deleteImage(${img.id})">حذف</button>`;
                 list.appendChild(item);
             });
         }
 
-        function getCategoryName(cat) {
-            const names = {'khutaba': 'خطابة حسينية', 'mawakib': 'مواكب وعزاء', 'mawalid': 'مواليد وأفراح', 'other': 'أخرى'};
-            return names[cat] || cat;
+        async function deleteImage(id) { 
+            if(confirm('حذف؟')) { await fetch(`/api/images/${id}`, { method: 'DELETE' }); initAdmin(); }
         }
 
-        async function deleteImage(id) {
-            if (confirm('هل أنت متأكد؟')) {
-                await fetch(`/api/images/${id}`, { method: 'DELETE' });
-                const response = await fetch('/api/data');
-                const data = await response.json();
-                loadAdminList(data.images);
-            }
+        async function saveSocial() {
+            const data = { insta: document.getElementById('social-insta').value, wa: document.getElementById('social-wa').value };
+            await fetch('/api/social', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(data) });
+            alert('تم');
         }
-
-        function logout() { location.reload(); }
     </script>
 </body>
 </html>

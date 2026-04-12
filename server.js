@@ -29,6 +29,15 @@ app.post('/api/images', (req, res) => {
     res.json({ success: true });
 });
 
+// API: Bulk add images
+app.post('/api/images/bulk', (req, res) => {
+    const data = JSON.parse(fs.readFileSync(DATA_FILE));
+    const newImages = req.body.images.map(img => ({ ...img, id: Date.now() + Math.random() }));
+    data.images.push(...newImages);
+    fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2));
+    res.json({ success: true, count: newImages.length });
+});
+
 // API: Delete image
 app.delete('/api/images/:id', (req, res) => {
     const data = JSON.parse(fs.readFileSync(DATA_FILE));
