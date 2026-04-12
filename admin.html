@@ -238,53 +238,60 @@
 
         function showSection(id) {
             document.querySelectorAll('.admin-section').forEach(s => s.classList.remove('active'));
-            document.getElementById('section-' + id).classList.add('active');
+            const target = document.getElementById('section-' + id);
+            if(target) target.classList.add('active');
             
             document.querySelectorAll('.side-btn').forEach(b => b.classList.remove('active'));
             event.currentTarget.classList.add('active');
         }
 
-        function initAdmin() {
-            loadAdminList();
-            loadSocialInputs();
+        async function initAdmin() {
+            const response = await fetch('/api/data');
+            const data = await response.json();
+            
+            loadAdminList(data.images);
+            document.getElementById('social-insta').value = data.social.insta;
+            document.getElementById('social-wa').value = data.social.wa;
         }
 
-        function loadSocialInputs() {
-            const links = JSON.parse(localStorage.getItem('menbar_social')) || {
-                insta: 'https://www.instagram.com/menbar.313/',
-                wa: '97332115623'
-            };
-            document.getElementById('social-insta').value = links.insta;
-            document.getElementById('social-wa').value = links.wa;
-        }
-
-        function saveSocial() {
+        async function saveSocial() {
             const links = {
                 insta: document.getElementById('social-insta').value,
                 wa: document.getElementById('social-wa').value
             };
-            localStorage.setItem('menbar_social', JSON.stringify(links));
+            
+            await fetch('/api/social', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(links)
+            });
             alert('تم حفظ الروابط بنجاح');
         }
 
-        function addImage() {
+        async function addImage() {
             const url = document.getElementById('img-url').value;
             const category = document.getElementById('img-category').value;
             if (!url) { alert('يرجى وضع رابط الصورة'); return; }
 
-            const images = JSON.parse(localStorage.getItem('menbar_images')) || [];
-            images.push({ url, category, id: Date.now() });
-            localStorage.setItem('menbar_images', JSON.stringify(images));
+            await fetch('/api/images', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ url, category })
+            });
+            
             document.getElementById('img-url').value = '';
-            loadAdminList();
+            const response = await fetch('/api/data');
+            const data = await response.json();
+            loadAdminList(data.images);
             alert('تمت الإضافة بنجاح');
         }
 
-        function loadAdminList() {
+        function loadAdminList(images) {
             const list = document.getElementById('admin-images-list');
-            const images = JSON.parse(localStorage.getItem('menbar_images')) || [];
             list.innerHTML = '';
-            images.reverse().forEach(img => {
+            if (!images) return;
+            
+            [...images].reverse().forEach(img => {
                 const item = document.createElement('div');
                 item.className = 'image-item';
                 item.innerHTML = `
@@ -303,12 +310,12 @@
             return names[cat] || cat;
         }
 
-        function deleteImage(id) {
+        async function deleteImage(id) {
             if (confirm('هل أنت متأكد؟')) {
-                let images = JSON.parse(localStorage.getItem('menbar_images')) || [];
-                images = images.filter(img => img.id !== id);
-                localStorage.setItem('menbar_images', JSON.stringify(images));
-                loadAdminList();
+                await fetch(`/api/images/${id}`, { method: 'DELETE' });
+                const response = await fetch('/api/data');
+                const data = await response.json();
+                loadAdminList(data.images);
             }
         }
 

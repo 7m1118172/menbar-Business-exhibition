@@ -80,34 +80,47 @@
     </footer>
 
     <script>
-        // Load images from localStorage
-        function loadGallery() {
+        async function loadData() {
+            try {
+                const response = await fetch('/api/data');
+                const data = await response.json();
+                
+                renderGallery(data.images);
+                renderSocial(data.social);
+            } catch (err) {
+                console.error("Error loading data:", err);
+            }
+        }
+
+        function renderGallery(images) {
             const grid = document.getElementById('gallery-grid');
-            const images = JSON.parse(localStorage.getItem('menbar_images')) || [];
-            
-            if (images.length === 0) {
-                grid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: var(--text-secondary);">لا توجد أعمال لعرضها حالياً.</p>';
+            if (!images || images.length === 0) {
+                grid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: var(--text-secondary); padding: 4rem 0;">لا توجد أعمال لعرضها حالياً.</p>';
                 return;
             }
 
-            renderImages(images);
-        }
-
-        function renderImages(images) {
-            const grid = document.getElementById('gallery-grid');
             grid.innerHTML = '';
-            
-            images.forEach(img => {
+            images.reverse().forEach(img => {
                 const item = document.createElement('div');
                 item.className = `gallery-item ${img.category}`;
                 item.innerHTML = `
-                    <img src="${img.url}" alt="${img.title || 'تصميم منبر'}" loading="lazy">
+                    <img src="${img.url}" alt="تصميم منبر" loading="lazy">
                     <div class="item-overlay">
                         <span>${getCategoryName(img.category)}</span>
                     </div>
                 `;
                 grid.appendChild(item);
             });
+        }
+
+        function renderSocial(social) {
+            const insta = document.getElementById('insta-link');
+            const wa = document.getElementById('wa-link');
+            
+            if (social) {
+                insta.href = social.insta;
+                wa.href = `https://wa.me/${social.wa.replace(/\s+/g, '')}`;
+            }
         }
 
         function getCategoryName(cat) {
@@ -137,16 +150,6 @@
             });
         }
 
-        function loadSocialLinks() {
-            const links = JSON.parse(localStorage.getItem('menbar_social')) || {
-                insta: 'https://www.instagram.com/menbar.313/',
-                wa: '97332115623'
-            };
-
-            document.getElementById('insta-link').href = links.insta;
-            document.getElementById('wa-link').href = `https://wa.me/${links.wa.replace(/\s+/g, '')}`;
-        }
-
         // Handle navigation smoothly
         document.querySelectorAll('nav a').forEach(anchor => {
             anchor.addEventListener('click', function(e) {
@@ -158,8 +161,7 @@
         });
 
         window.onload = () => {
-            loadGallery();
-            loadSocialLinks();
+            loadData();
         };
     </script>
 </body>
