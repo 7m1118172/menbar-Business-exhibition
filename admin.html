@@ -18,7 +18,8 @@
         .form-group { margin-bottom: 1.5rem; }
         label { display: block; margin-bottom: 0.8rem; color: var(--accent-color); }
         input, select { width: 100%; padding: 1rem; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); color: #fff; border-radius: 10px; font-family: inherit; }
-        .btn-action { background: var(--accent-color); color: #000; border: none; padding: 1rem 2rem; border-radius: 10px; cursor: pointer; font-weight: bold; width: 100%; margin-top: 1rem; }
+        .btn-action { background: var(--accent-color); color: #000; border: none; padding: 1rem 2rem; border-radius: 10px; cursor: pointer; font-weight: bold; width: 100%; margin-top: 1rem; transition: 0.3s; }
+        .btn-action:hover { transform: scale(1.02); }
         .image-item { display: flex; align-items: center; justify-content: space-between; padding: 1rem; border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
         .image-item img { height: 60px; width: 60px; object-fit: cover; border-radius: 8px; }
         .local-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 1rem; margin: 1.5rem 0; }
@@ -26,6 +27,7 @@
         .local-item.selected { border-color: var(--accent-color); }
         .local-item img { width: 100%; height: 140px; object-fit: cover; }
         #admin-login-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--bg-color); z-index: 2000; display: flex; justify-content: center; align-items: center; }
+        .bulk-actions-bar { background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 15px; display: flex; align-items: center; gap: 1rem; margin-top: 1rem; }
     </style>
 </head>
 <body>
@@ -45,42 +47,58 @@
 
     <div class="admin-wrapper" id="admin-content" style="display: none;">
         <div class="admin-sidebar">
-            <button class="side-btn active" onclick="showSection('local')"><i class="fas fa-folder-open"></i> صور الاستضافة (جديد)</button>
-            <button class="side-btn" onclick="showSection('upload')"><i class="fas fa-link"></i> إضافة برابط خارجي</button>
+            <button class="side-btn active" onclick="showSection('local')"><i class="fas fa-folder-open"></i> صور الاستضافة</button>
             <button class="side-btn" onclick="showSection('social')"><i class="fas fa-cog"></i> الإعدادات</button>
+            <button class="side-btn" onclick="showSection('backup')"><i class="fas fa-database"></i> نسخ البيانات (للثبات)</button>
             <button class="side-btn" onclick="location.reload()"><i class="fas fa-sign-out-alt"></i> خروج</button>
         </div>
 
         <div class="admin-main">
             <!-- Local Hosting Section -->
             <div id="section-local" class="admin-section active">
-                <h2>الصور الموجودة في مجلد uploads</h2>
-                <p style="color: var(--text-secondary); margin-bottom: 1rem;">اختر الصور التي رفعتها للمجلد ثم حدد قسمها لإضافتها للمعرض.</p>
-                <button class="btn-action" style="width: auto; padding: 0.5rem 1rem; margin-bottom: 1rem;" onclick="scanLocalFiles()">تحديث القائمة</button>
+                <h2>الصور المرفوعة</h2>
+                <p style="color: var(--text-secondary); margin-bottom: 1rem;">اختر الصور لتعيين قسم لها أو حذفها من المعرض الأونلاين.</p>
+                <button class="btn-action" style="width: auto; padding: 0.5rem 1rem; margin-bottom: 1rem;" onclick="scanLocalFiles()"><i class="fas fa-sync"></i> تحديث القائمة</button>
                 
                 <div id="local-files-grid" class="local-grid"></div>
 
                 <div class="bulk-actions-bar" id="local-actions" style="display:none;">
-                    <select id="local-category" style="width: auto;"><option value="khutaba">الخطابة الحسينية</option><option value="mawakib">المواكب والعزاء</option><option value="mawalid">المواليد والأفراح</option><option value="other">أخرى</option></select>
+                    <select id="local-category" style="width: auto;">
+                        <option value="khutaba">الخطابة الحسينية</option>
+                        <option value="mawakib">المواكب والعزاء</option>
+                        <option value="mawalid">المواليد والأفراح</option>
+                        <option value="other">أخرى</option>
+                    </select>
                     <button class="btn-action" style="width: auto; margin:0;" onclick="saveLocalSelection()">إضافة المختار (<span id="local-count">0</span>)</button>
                 </div>
-            </div>
 
-            <!-- Single Upload -->
-            <div id="section-upload" class="admin-section">
-                <h2>إضافة برابط مباشر</h2>
-                <div class="form-group"><label>الرابط</label><input type="text" id="img-url"></div>
-                <div class="form-group"><label>القسم</label><select id="single-category"><option value="khutaba">خطابة</option><option value="mawakib">عزاء</option><option value="mawalid">مواليد</option><option value="other">أخرى</option></select></div>
-                <button class="btn-action" onclick="addImage()">حفظ</button>
+                <hr style="margin: 2rem 0; opacity: 0.1;">
+                <h3>المعرض الحالي (أونلاين)</h3>
                 <div id="admin-images-list" class="image-list"></div>
             </div>
 
             <!-- Settings -->
             <div id="section-social" class="admin-section">
-                <h2>الإعدادات</h2>
+                <h2>إعدادات الروابط</h2>
                 <div class="form-group"><label>انستقرام</label><input type="text" id="social-insta"></div>
                 <div class="form-group"><label>واتساب</label><input type="text" id="social-wa"></div>
-                <button class="btn-action" onclick="saveSocial()">حفظ</button>
+                <button class="btn-action" onclick="saveSocial()">حفظ الإعدادات</button>
+            </div>
+
+            <!-- Backup Section -->
+            <div id="section-backup" class="admin-section">
+                <h2>نسخ البيانات (حماية من الضياع)</h2>
+                <div style="background: rgba(201, 168, 106, 0.1); padding: 1.5rem; border-radius: 10px; margin-bottom: 1.5rem; border-right: 5px solid var(--accent-color);">
+                    <p>هذا الكود يحتوي على كل ترتيباتك الحالية. لكي لا يضيع تعبك عند رفع الموقع مرة أخرى:</p>
+                    <ol style="margin: 1rem 1.5rem; line-height: 1.8;">
+                        <li>اضغط على زر <b>نسخ الكود</b> بالأسفل.</li>
+                        <li>افتح ملف <code>data.json</code> في جهازك وامسح كل شيء فيه.</li>
+                        <li>الصق الكود الذي نسخته واحفظ الملف.</li>
+                        <li>ارفع الملف لـ GitHub.</li>
+                    </ol>
+                </div>
+                <textarea id="backup-area" style="width: 100%; height: 250px; background: rgba(0,0,0,0.5); color: #0f0; padding: 1rem; border-radius: 10px; font-family: monospace; border: 1px solid rgba(255,255,255,0.1);"></textarea>
+                <button class="btn-action" onclick="copyBackup()"><i class="fas fa-copy"></i> نسخ الكود الآن</button>
             </div>
         </div>
     </div>
@@ -102,6 +120,7 @@
             document.querySelectorAll('.side-btn').forEach(b => b.classList.remove('active'));
             event.currentTarget.classList.add('active');
             if(id === 'local') scanLocalFiles();
+            if(id === 'backup') updateBackupArea();
         }
 
         async function initAdmin() {
@@ -110,7 +129,24 @@
             loadAdminList(data.images);
             document.getElementById('social-insta').value = data.social.insta;
             document.getElementById('social-wa').value = data.social.wa;
+            updateBackupArea(data);
             scanLocalFiles();
+        }
+
+        async function updateBackupArea(providedData) {
+            let data = providedData;
+            if(!data) {
+                const res = await fetch('/api/data');
+                data = await res.json();
+            }
+            document.getElementById('backup-area').value = JSON.stringify(data, null, 2);
+        }
+
+        function copyBackup() {
+            const area = document.getElementById('backup-area');
+            area.select();
+            document.execCommand('copy');
+            alert('تم نسخ الكود! الآن ضعه في ملف data.json في جهازك وارلعه لـ GitHub.');
         }
 
         async function scanLocalFiles() {
@@ -147,35 +183,47 @@
             
             await fetch('/api/images/bulk', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ images }) });
             alert('تمت إضافة الصور بنجاح');
-            location.reload();
-        }
-
-        async function addImage() {
-            const url = document.getElementById('img-url').value;
-            const category = document.getElementById('single-category').value;
-            await fetch('/api/images', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ url, category }) });
             initAdmin();
         }
 
         function loadAdminList(images) {
             const list = document.getElementById('admin-images-list');
             list.innerHTML = '';
-            images.reverse().forEach(img => {
+            if(!images || images.length === 0) {
+                list.innerHTML = '<p style="padding:1rem; opacity:0.5;">المعرض فارغ حالياً.</p>';
+                return;
+            }
+            [...images].reverse().forEach(img => {
                 const item = document.createElement('div');
                 item.className = 'image-item';
-                item.innerHTML = `<img src="${img.url}"><span>${img.category}</span><button onclick="deleteImage(${img.id})">حذف</button>`;
+                item.innerHTML = `
+                    <div style="display:flex; align-items:center; gap:1rem;">
+                        <img src="${img.url}">
+                        <span style="color:var(--accent-color)">[${getCatTitle(img.category)}]</span>
+                    </div>
+                    <button class="btn-action" style="width:auto; margin:0; padding:0.5rem 1rem; background:#ff4444; color:#fff;" onclick="deleteImage(${img.id})">حذف</button>
+                `;
                 list.appendChild(item);
             });
         }
 
+        function getCatTitle(cat) {
+            const titles = { khutaba: 'خطابة', mawakib: 'عزاء', mawalid: 'مواليد', other: 'أخرى' };
+            return titles[cat] || cat;
+        }
+
         async function deleteImage(id) {
-            if(confirm('حذف؟')) { await fetch(`/api/images/${id}`, { method: 'DELETE' }); initAdmin(); }
+            if(confirm('هل أنت متأكد من حذف هذه الصورة من المعرض؟')) {
+                await fetch(`/api/images/${id}`, { method: 'DELETE' });
+                initAdmin();
+            }
         }
 
         async function saveSocial() {
             const data = { insta: document.getElementById('social-insta').value, wa: document.getElementById('social-wa').value };
             await fetch('/api/social', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(data) });
-            alert('تم');
+            alert('تم حفظ الإعدادات بنجاح');
+            initAdmin();
         }
     </script>
 </body>
