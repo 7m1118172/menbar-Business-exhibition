@@ -123,8 +123,10 @@
                 const item = document.createElement('div');
                 item.className = `gallery-item ${img.category}`;
                 item.innerHTML = `
+                    <div class="skeleton"></div>
                     <img src="${img.url}" alt="تصميم منبر" loading="lazy" 
                          onerror="this.onerror=null; repairImage(this)"
+                         onload="this.classList.add('loaded'); this.previousElementSibling.remove()"
                          onclick="openLightbox('${img.url}', '${getCategoryName(img.category)}')">
                     <div class="item-overlay" onclick="openLightbox('${img.url}', '${getCategoryName(img.category)}')">
                         <span>${getCategoryName(img.category)}</span>

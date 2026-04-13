@@ -292,22 +292,45 @@ section {
     position: relative;
     border-radius: 15px;
     overflow: hidden;
-    background: var(--card-bg);
+    background: rgba(201, 168, 106, 0.05); /* Placeholder color */
     transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     border: 1px solid rgba(255, 255, 255, 0.05);
     box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    min-height: 250px; /* Prevent layout collapse */
 }
 
-.gallery-item:hover {
-    transform: scale(1.03);
+/* Skeleton Animation */
+.skeleton {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(201, 168, 106, 0.1), transparent);
+    background-size: 200% 100%;
+    animation: shimmer 1.5s infinite;
+    z-index: 1;
+}
+
+@keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
 }
 
 .gallery-item img {
     width: 100%;
     height: auto;
     display: block;
-    object-fit: contain; /* Don't crop as requested */
-    max-height: 500px;
+    object-fit: contain;
+    max-height: 600px;
+    opacity: 0;
+    transition: opacity 0.8s ease;
+    position: relative;
+    z-index: 2;
+}
+
+.gallery-item img.loaded {
+    opacity: 1;
 }
 
 .item-overlay {
