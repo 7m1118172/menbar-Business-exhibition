@@ -48,12 +48,30 @@
     <div class="admin-wrapper" id="admin-content" style="display: none;">
         <div class="admin-sidebar">
             <button class="side-btn active" onclick="showSection('local')"><i class="fas fa-folder-open"></i> صور الاستضافة</button>
+            <button class="side-btn" onclick="showSection('stats')"><i class="fas fa-chart-line"></i> إحصائيات الزوار</button>
             <button class="side-btn" onclick="showSection('social')"><i class="fas fa-cog"></i> الإعدادات</button>
             <button class="side-btn" onclick="showSection('backup')"><i class="fas fa-database"></i> نسخ البيانات (للثبات)</button>
             <button class="side-btn" onclick="location.reload()"><i class="fas fa-sign-out-alt"></i> خروج</button>
         </div>
 
         <div class="admin-main">
+            <!-- Stats Section -->
+            <div id="section-stats" class="admin-section">
+                <h2>إحصائيات الزيارات</h2>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 2rem;">
+                    <div style="background: rgba(201, 168, 106, 0.1); padding: 2rem; border-radius: 20px; text-align: center; border: 1px solid var(--accent-color);">
+                        <h3 style="color: var(--accent-color); margin-bottom: 1rem;">زيارات اليوم</h3>
+                        <div id="stats-today" style="font-size: 3rem; font-weight: 900;">0</div>
+                    </div>
+                    <div style="background: rgba(255, 255, 255, 0.05); padding: 2rem; border-radius: 20px; text-align: center; border: 1px solid rgba(255,255,255,0.1);">
+                        <h3 style="color: #fff; margin-bottom: 1rem;">زيارات هذا الشهر</h3>
+                        <div id="stats-month" style="font-size: 3rem; font-weight: 900;">0</div>
+                    </div>
+                </div>
+                <h3>سجل آخر 7 أيام</h3>
+                <div id="stats-history-list" style="margin-top: 1rem;"></div>
+            </div>
+
             <!-- Local Hosting Section -->
             <div id="section-local" class="admin-section active">
                 <h2>الصور المرفوعة</h2>
@@ -130,7 +148,35 @@
             document.getElementById('social-insta').value = data.social.insta;
             document.getElementById('social-wa').value = data.social.wa;
             updateBackupArea(data);
+            renderStats(data.stats);
             scanLocalFiles();
+        }
+
+        function renderStats(stats) {
+            if (!stats || !stats.daily) return;
+            
+            const today = new Date().toISOString().split('T')[0];
+            const currentMonth = today.substring(0, 7); // YYYY-MM
+            
+            // Today's total
+            document.getElementById('stats-today').innerText = stats.daily[today] || 0;
+            
+            // Month total
+            let monthTotal = 0;
+            Object.keys(stats.daily).forEach(date => {
+                if (date.startsWith(currentMonth)) monthTotal += stats.daily[date];
+            });
+            document.getElementById('stats-month').innerText = monthTotal;
+            
+            // Last 7 days list
+            const historyList = document.getElementById('stats-history-list');
+            historyList.innerHTML = '';
+            Object.keys(stats.daily).sort().reverse().slice(0, 7).forEach(date => {
+                const row = document.createElement('div');
+                row.style.cssText = 'display:flex; justify-content:space-between; padding: 1rem; border-bottom: 1px solid rgba(255,255,255,0.05);';
+                row.innerHTML = `<span>${date}</span><span style="color:var(--accent-color); font-weight:bold;">${stats.daily[date]} زيارة</span>`;
+                historyList.appendChild(row);
+            });
         }
 
         async function updateBackupArea(providedData) {

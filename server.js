@@ -25,6 +25,37 @@ app.get('/api/data', (req, res) => {
     res.json(data);
 });
 
+// Middleware to track visits
+app.use((req, res, next) => {
+    // Only track main page views, not API or static assets
+    if (req.path === '/' || req.path === '/index.html') {
+        try {
+            const data = JSON.parse(fs.readFileSync(DATA_FILE));
+            if (!data.stats) data.stats = { daily: {}, history: [] };
+            
+            // For Render/Proxy behind environments
+            const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress;
+            const date = new Date().toISOString().split('T')[0];
+            
+            // Check if this IP already visited today
+            const alreadyVisited = data.stats.history.find(v => v.ip === ip && v.date === date);
+            
+            if (!alreadyVisited) {
+                data.stats.history.push({ ip, date });
+                data.stats.daily[date] = (data.stats.daily[date] || 0) + 1;
+                
+                // Keep history clean (last 1000 unique records)
+                if (data.stats.history.length > 1000) data.stats.history.shift();
+                
+                fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2));
+            }
+        } catch (e) {
+            console.error("Tracking error:", e);
+        }
+    }
+    next();
+});
+
 // API: Scan for images in both root and uploads
 app.get('/api/scan-uploads', (req, res) => {
     let allFiles = [];
