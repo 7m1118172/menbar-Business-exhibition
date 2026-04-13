@@ -92,6 +92,14 @@ app.delete('/api/images/:id', (req, res) => {
     res.json({ success: true });
 });
 
+// API: Update global image order
+app.post('/api/data/order', (req, res) => {
+    const data = JSON.parse(fs.readFileSync(DATA_FILE));
+    data.images = req.body.images;
+    fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2));
+    res.json({ success: true });
+});
+
 // API: Update social links
 app.post('/api/social', (req, res) => {
     const data = JSON.parse(fs.readFileSync(DATA_FILE));

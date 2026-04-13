@@ -18,7 +18,7 @@
         .form-group { margin-bottom: 1.5rem; }
         label { display: block; margin-bottom: 0.8rem; color: var(--accent-color); }
         input, select { width: 100%; padding: 1rem; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); color: #fff; border-radius: 10px; font-family: inherit; }
-        .btn-action { background: var(--accent-color); color: #000; border: none; padding: 1rem 2rem; border-radius: 10px; cursor: pointer; font-weight: bold; width: 100%; margin-top: 1rem; transition: 0.3s; }
+        .btn-action { background: var(--accent-color); color: #000; border: none; padding: 1rem 2rem; border-radius: 10px; cursor: pointer; font-weight: bold; width: 100%; margin-top: 1rem; transition: 0.3s; padding: 1rem; }
         .btn-action:hover { transform: scale(1.02); }
         .image-item { display: flex; align-items: center; justify-content: space-between; padding: 1rem; border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
         .image-item img { height: 60px; width: 60px; object-fit: cover; border-radius: 8px; }
@@ -91,7 +91,7 @@
                 </div>
 
                 <hr style="margin: 2rem 0; opacity: 0.1;">
-                <h3>المعرض الحالي (أونلاين)</h3>
+                <h3>المعرض الحالي (تعديل الترتيب)</h3>
                 <div id="admin-images-list" class="image-list"></div>
             </div>
 
@@ -123,6 +123,7 @@
 
     <script>
         let selectedLocalFiles = new Set();
+        let galleryImages = [];
 
         function checkPass() {
             if (document.getElementById('admin-pass').value === '123123') {
@@ -138,13 +139,15 @@
             document.querySelectorAll('.side-btn').forEach(b => b.classList.remove('active'));
             event.currentTarget.classList.add('active');
             if(id === 'local') scanLocalFiles();
+            if(id === 'stats') initAdmin(); // Refresh stats
             if(id === 'backup') updateBackupArea();
         }
 
         async function initAdmin() {
             const res = await fetch('/api/data');
             const data = await res.json();
-            loadAdminList(data.images);
+            galleryImages = data.images || [];
+            loadAdminList(galleryImages);
             document.getElementById('social-insta').value = data.social.insta;
             document.getElementById('social-wa').value = data.social.wa;
             updateBackupArea(data);
@@ -154,21 +157,14 @@
 
         function renderStats(stats) {
             if (!stats || !stats.daily) return;
-            
             const today = new Date().toISOString().split('T')[0];
-            const currentMonth = today.substring(0, 7); // YYYY-MM
-            
-            // Today's total
+            const currentMonth = today.substring(0, 7);
             document.getElementById('stats-today').innerText = stats.daily[today] || 0;
-            
-            // Month total
             let monthTotal = 0;
             Object.keys(stats.daily).forEach(date => {
                 if (date.startsWith(currentMonth)) monthTotal += stats.daily[date];
             });
             document.getElementById('stats-month').innerText = monthTotal;
-            
-            // Last 7 days list
             const historyList = document.getElementById('stats-history-list');
             historyList.innerHTML = '';
             Object.keys(stats.daily).sort().reverse().slice(0, 7).forEach(date => {
@@ -197,7 +193,7 @@
 
         async function scanLocalFiles() {
             const res = await fetch('/api/scan-uploads');
-            const files = await res.json();
+            const files = await res.json() || [];
             const grid = document.getElementById('local-files-grid');
             grid.innerHTML = '';
             selectedLocalFiles.clear();
@@ -226,7 +222,6 @@
             if(selectedLocalFiles.size === 0) return;
             const cat = document.getElementById('local-category').value;
             const images = Array.from(selectedLocalFiles).map(path => ({ url: path, category: cat }));
-            
             await fetch('/api/images/bulk', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ images }) });
             alert('تمت إضافة الصور بنجاح');
             initAdmin();
@@ -239,7 +234,7 @@
                 list.innerHTML = '<p style="padding:1rem; opacity:0.5;">المعرض فارغ حالياً.</p>';
                 return;
             }
-            [...images].reverse().forEach(img => {
+            images.forEach((img, idx) => {
                 const item = document.createElement('div');
                 item.className = 'image-item';
                 item.innerHTML = `
@@ -247,10 +242,25 @@
                         <img src="${img.url}">
                         <span style="color:var(--accent-color)">[${getCatTitle(img.category)}]</span>
                     </div>
-                    <button class="btn-action" style="width:auto; margin:0; padding:0.5rem 1rem; background:#ff4444; color:#fff;" onclick="deleteImage(${img.id})">حذف</button>
+                    <div style="display:flex; gap:0.5rem; align-items:center;">
+                        <button class="side-btn" style="padding:0.3rem 0.6rem; margin:0;" onclick="moveImage(${idx}, -1)" ${idx === 0 ? 'disabled style="opacity:0.2"' : ''} title="للأعلى"><i class="fas fa-arrow-up"></i></button>
+                        <button class="side-btn" style="padding:0.3rem 0.6rem; margin:0;" onclick="moveImage(${idx}, 1)" ${idx === images.length - 1 ? 'disabled style="opacity:0.2"' : ''} title="للأسفل"><i class="fas fa-arrow-down"></i></button>
+                        <button class="btn-action" style="width:auto; margin:0; padding:0.5rem 1rem; background:#ff4444; color:#fff;" onclick="deleteImage(${img.id})"><i class="fas fa-trash"></i></button>
+                    </div>
                 `;
                 list.appendChild(item);
             });
+        }
+
+        async function moveImage(index, direction) {
+            const newIndex = index + direction;
+            if (newIndex < 0 || newIndex >= galleryImages.length) return;
+            const temp = galleryImages[index];
+            galleryImages[index] = galleryImages[newIndex];
+            galleryImages[newIndex] = temp;
+            await fetch('/api/data/order', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify({ images: galleryImages }) });
+            loadAdminList(galleryImages);
+            updateBackupArea();
         }
 
         function getCatTitle(cat) {
@@ -259,7 +269,7 @@
         }
 
         async function deleteImage(id) {
-            if(confirm('هل أنت متأكد من حذف هذه الصورة من المعرض؟')) {
+            if(confirm('هل أنت متأكد من حذف هذه الصورة؟')) {
                 await fetch(`/api/images/${id}`, { method: 'DELETE' });
                 initAdmin();
             }
@@ -268,7 +278,7 @@
         async function saveSocial() {
             const data = { insta: document.getElementById('social-insta').value, wa: document.getElementById('social-wa').value };
             await fetch('/api/social', { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(data) });
-            alert('تم حفظ الإعدادات بنجاح');
+            alert('تم حفظ الإعدادات');
             initAdmin();
         }
     </script>
