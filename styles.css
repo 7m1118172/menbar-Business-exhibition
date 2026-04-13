@@ -177,22 +177,26 @@ nav ul li a:hover::after {
     font-size: clamp(2.5rem, 12vw, 5.5rem);
     font-weight: 900;
     margin-bottom: 2rem;
-    background: linear-gradient(45deg, #fff, var(--accent-color));
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    /* Forced colors for Dark Mode compatibility */
+    background: linear-gradient(45deg, #ffffff 30%, var(--accent-color) 100%) !important;
+    -webkit-background-clip: text !important;
+    background-clip: text !important;
+    -webkit-text-fill-color: transparent !important;
+    color: var(--accent-color) !important; /* Fallback */
+    
     opacity: 0;
     transform: translateY(30px);
     animation: fadeInUp 1s forwards;
     letter-spacing: -1px;
-    padding: 0.5rem 1rem; /* More padding to prevent clipping */
-    line-height: 1.4; /* Increased line-height */
-    display: inline-block; /* Helps with clipping issues */
+    padding: 0.5rem 1rem;
+    line-height: 1.4;
+    display: inline-block;
 }
 
 .hero p {
     font-size: clamp(1.1rem, 4vw, 1.6rem);
     font-weight: 300;
-    color: var(--text-secondary);
+    color: #e0e0e0 !important; /* Brighter fallback for visibility */
     max-width: 800px;
     opacity: 0;
     transform: translateY(30px);

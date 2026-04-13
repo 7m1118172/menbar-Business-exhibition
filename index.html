@@ -3,7 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>منبر | للتصاميم الحسينية </title>
+    <title>منبر | للتصاميم الحسينية والإبداع الرقمي</title>
+    <meta name="description" content="منبر هو منصة إبداعية متخصصة في ابتكار أرقى التصاميم الحسينية والدينية، نجسد القدسية في قوالب فنية عصرية.">
+    <meta name="keywords" content="تصاميم حسينية، شعارات مآتم، بوسترات عزاء، منبر للتصميم، تصاميم إسلامية، إستوديو منبر، تصميم مناسبات دينية">
+    <meta property="og:title" content="منبر للتصاميم الحسينية">
+    <meta property="og:description" content="نحول أفكاركم إلى إبداع يخدم القضية الحسينية.">
     <link rel="icon" type="image/png" href="https://github.com/7m1118172/logo-menbar-and-font/raw/main/%D9%84%D9%88%D8%AC%D9%88%20%D8%A8%D8%AF%D9%88%D9%86%20%D8%AE%D9%84%D9%81%D9%8A%D8%A9.png">
     <link rel="stylesheet" href="fonts.css">
     <link rel="stylesheet" href="styles.css">
@@ -177,8 +181,9 @@
             });
         });
 
-        // Lightbox Logic
+        // Lightbox Logic with Advanced Zoom
         let currentZoom = 1;
+        let lastTouchDistance = 0;
         const modal = document.getElementById('image-modal');
         const modalImg = document.getElementById('modal-img');
         const captionText = document.getElementById('modal-caption');
@@ -188,6 +193,41 @@
             modalImg.src = url;
             captionText.innerHTML = caption;
             resetZoom();
+        }
+
+        // Mouse Wheel Zoom
+        modal.addEventListener('wheel', (e) => {
+            e.preventDefault();
+            const delta = e.deltaY > 0 ? 0.9 : 1.1;
+            zoomImage(delta);
+        }, { passive: false });
+
+        // Touch Pinch Zoom
+        modal.addEventListener('touchmove', (e) => {
+            if (e.touches.length === 2) {
+                const distance = Math.hypot(
+                    e.touches[0].pageX - e.touches[1].pageX,
+                    e.touches[0].pageY - e.touches[1].pageY
+                );
+                
+                if (lastTouchDistance > 0) {
+                    const delta = distance / lastTouchDistance;
+                    zoomImage(delta);
+                }
+                lastTouchDistance = distance;
+            }
+        }, { passive: true });
+
+        modal.addEventListener('touchend', () => {
+            lastTouchDistance = 0;
+        });
+
+        function zoomImage(factor) {
+            currentZoom *= factor;
+            // Limit zoom scale
+            if (currentZoom < 0.5) currentZoom = 0.5;
+            if (currentZoom > 5) currentZoom = 5;
+            modalImg.style.transform = `scale(${currentZoom})`;
         }
 
         function repairImage(img) {
@@ -202,11 +242,6 @@
             } catch(e) {
                 img.style.display = 'none';
             }
-        }
-
-        function zoomImage(factor) {
-            currentZoom *= factor;
-            modalImg.style.transform = `scale(${currentZoom})`;
         }
 
         function resetZoom() {
