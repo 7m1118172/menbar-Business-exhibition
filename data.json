@@ -209,10 +209,135 @@
       "url": "/ذكرى استشهاد الامام الصادق4.png",
       "category": "mawakib",
       "id": 1776053035015
+    },
+    {
+      "url": "https://images.unsplash.com/photo-1628113310821-9d9014631671",
+      "category": "khutaba",
+      "id": 1
     }
   ],
   "social": {
     "insta": "https://www.instagram.com/menbar.313/",
     "wa": "97332115623"
-  }
+  },
+  "videos": [
+    {
+      "url": "https://youtu.be/DMv5cIR0CxE?si=c6F833HC0yZTNbAG",
+      "type": "video",
+      "start": "103",
+      "end": "199",
+      "rotate": false,
+      "id": 1776366059898.5518
+    },
+    {
+      "url": "https://youtu.be/DMv5cIR0CxE?si=c6F833HC0yZTNbAG",
+      "type": "video",
+      "start": "103",
+      "end": "199",
+      "rotate": false,
+      "id": 1776366058007.5403
+    },
+    {
+      "url": "https://www.instagram.com/reel/DW65Za0ANS8/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==",
+      "type": "reel",
+      "start": "20.5",
+      "end": "30",
+      "id": 1776351925948.8489
+    },
+    {
+      "url": "refused to connect.",
+      "type": "video",
+      "start": "20.5",
+      "end": "30",
+      "id": 1776351868675.414
+    },
+    {
+      "url": "https://youtu.be/DMv5cIR0CxE?si=c6F833HC0yZTNbAG",
+      "type": "video",
+      "start": "-1",
+      "end": "",
+      "id": 1776351828434.7263
+    },
+    {
+      "type": "reel",
+      "id": 1776342985887,
+      "dummy": false,
+      "url": "https://www.instagram.com/reel/DW65Za0ANS8/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==",
+      "fullUrl": "https://www.instagram.com/reel/DW65Za0ANS8/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA==",
+      "rotate": true
+    }
+  ],
+  "beforeAfter": [
+    {
+      "before": "\"C:\\Users\\dell\\Desktop\\حسين\\منبر\\معرض الاعمال\\uploads\\مولد الإمام المهدي.png\"",
+      "after": "\"C:\\Users\\dell\\Desktop\\حسين\\منبر\\معرض الاعمال\\uploads\\مولد السيدة رقية.png\"",
+      "id": 1776351986148.1653
+    },
+    {
+      "before": "\"C:\\Users\\dell\\Desktop\\حسين\\منبر\\معرض الاعمال\\uploads\\مولد الإمام المهدي.png\"",
+      "after": "\"C:\\Users\\dell\\Desktop\\حسين\\منبر\\معرض الاعمال\\uploads\\مولد السيدة رقية.png\"",
+      "id": 1776351985717.6636
+    },
+    {
+      "before": "\"C:\\Users\\dell\\Desktop\\حسين\\منبر\\معرض الاعمال\\uploads\\مولد الإمام المهدي.png\"",
+      "after": "\"C:\\Users\\dell\\Desktop\\حسين\\منبر\\معرض الاعمال\\uploads\\مولد السيدة رقية.png\"",
+      "id": 1776351983197.4329
+    }
+  ],
+  "assets": [
+    {
+      "url": "dummy.ttf",
+      "category": "fonts",
+      "id": 3
+    }
+  ],
+  "orders": [],
+  "config": {
+    "showBeforeAfter": true,
+    "showAssets": true,
+    "prices": {
+      "muharram": "25",
+      "safar": "20",
+      "rabi": "10",
+      "seasonal": "18",
+      "shawal": "8",
+      "singleAd": "3"
+    },
+    "waMessages": {
+      "seasonal": "أنا سعيد باني سأبدا عمل هذا الموسم معكم لخدمة المأتم: ",
+      "allSeasons": "أنا سعيد باني سأبدا عمل كل المواسم معكم لخدمة المأتم: ",
+      "single": "طلب تصميم إعلان جديد للجهة: "
+    }
+  },
+  "stats": {
+    "daily": {
+      "2026-04-16": 1,
+      "2026-04-17": 1,
+      "2026-04-18": 1,
+      "2026-04-19": 1
+    },
+    "history": [
+      {
+        "ip": "::1",
+        "date": "2026-04-16"
+      },
+      {
+        "ip": "::1",
+        "date": "2026-04-17"
+      },
+      {
+        "ip": "::1",
+        "date": "2026-04-18"
+      },
+      {
+        "ip": "::1",
+        "date": "2026-04-19"
+      }
+    ]
+  },
+  "assetCategories": [
+    "fonts",
+    "png",
+    "bg"
+  ]
 }

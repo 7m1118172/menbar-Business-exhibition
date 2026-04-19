@@ -8,14 +8,21 @@ const PORT = process.env.PORT || 3000;
 const DATA_FILE = path.join(__dirname, 'data.json');
 const UPLOADS_DIR = path.join(__dirname, 'uploads');
 
-// Ensure data file exists
+// Ensure data file exists with all new structures
 if (!fs.existsSync(DATA_FILE)) {
-    fs.writeFileSync(DATA_FILE, JSON.stringify({ images: [], social: { insta: 'https://www.instagram.com/menbar.313/', wa: '97332115623' } }));
+    const initialData = {
+        images: [],
+        social: { insta: 'https://www.instagram.com/menbar.313/', wa: '97332115623' },
+        stats: { daily: {}, history: [] },
+        prices: { muharram: 25, safar: 20, rabia: 10, rajab: 18, shawwal: 8, single: 3 },
+        orders: []
+    };
+    fs.writeFileSync(DATA_FILE, JSON.stringify(initialData, null, 2));
 }
 
 app.use(bodyParser.json());
 
-// 1. Visitor Tracking (Must be at the TOP)
+// 1. Visitor Tracking
 app.use((req, res, next) => {
     if (req.path === '/' || req.path === '/index.html') {
         try {
@@ -30,12 +37,11 @@ app.use((req, res, next) => {
                 if (data.stats.history.length > 1000) data.stats.history.shift();
                 fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2));
             }
-        } catch (e) { console.error("Stats Error:", e); }
+        } catch (e) {}
     }
     next();
 });
 
-// 2. Static Assets
 app.use(express.static(path.join(__dirname)));
 if (fs.existsSync(UPLOADS_DIR)) {
     app.use('/uploads', express.static(UPLOADS_DIR));
@@ -44,50 +50,45 @@ if (fs.existsSync(UPLOADS_DIR)) {
 // API: Get all data
 app.get('/api/data', (req, res) => {
     const data = JSON.parse(fs.readFileSync(DATA_FILE));
+    if (!data.prices) data.prices = { muharram: 25, safar: 20, rabia: 10, rajab: 18, shawwal: 8, single: 3, fullyear: 100 };
+    if (!data.settings) data.settings = { showFullYear: true };
+    if (!data.orders) data.orders = [];
     res.json(data);
 });
 
-
-// API: Scan for images in both root and uploads
-app.get('/api/scan-uploads', (req, res) => {
-    let allFiles = [];
-    
-    // Scan uploads folder if exists
-    if (fs.existsSync(UPLOADS_DIR)) {
-        const files = fs.readdirSync(UPLOADS_DIR)
-            .filter(file => ['.png', '.jpg', '.jpeg', '.webp'].includes(path.extname(file).toLowerCase()))
-            .map(file => `uploads/${file}`);
-        allFiles.push(...files);
-    }
-    
-    // Scan root folder (excluding known system files)
-    const rootFiles = fs.readdirSync(__dirname)
-        .filter(file => {
-            const ext = path.extname(file).toLowerCase();
-            const isImage = ['.png', '.jpg', '.jpeg', '.webp'].includes(ext);
-            const isSystem = ['logo.png', 'pattern.png'].includes(file.toLowerCase());
-            return isImage && !isSystem;
-        })
-        .map(file => file);
-    
-    allFiles.push(...rootFiles);
-    
-    res.json(allFiles);
-});
-
-// API: Bulk add images
-app.post('/api/images/bulk', (req, res) => {
+// API: Log new order
+app.post('/api/orders', (req, res) => {
     const data = JSON.parse(fs.readFileSync(DATA_FILE));
-    const newImages = req.body.images.map((img, i) => ({ ...img, id: Date.now() + i }));
-    data.images.push(...newImages);
+    data.orders.push({ ...req.body, date: new Date().toISOString(), id: Date.now() });
     fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2));
-    res.json({ success: true, count: newImages.length });
+    res.json({ success: true });
 });
 
-// API: Delete image
-app.delete('/api/images/:id', (req, res) => {
+// API: Reset orders (Protected fixing robust check)
+app.post('/api/orders/reset', (req, res) => {
+    if (String(req.body.pass).trim() === '123') {
+        const data = JSON.parse(fs.readFileSync(DATA_FILE));
+        data.orders = [];
+        fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2));
+        res.json({ success: true });
+    } else {
+        res.status(403).json({ error: 'Wrong password' });
+    }
+});
+
+// API: Update settings
+app.post('/api/settings', (req, res) => {
     const data = JSON.parse(fs.readFileSync(DATA_FILE));
-    data.images = data.images.filter(img => img.id != req.params.id);
+    if (!data.settings) data.settings = {};
+    data.settings = { ...data.settings, ...req.body };
+    fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2));
+    res.json({ success: true });
+});
+
+// API: Update prices
+app.post('/api/prices', (req, res) => {
+    const data = JSON.parse(fs.readFileSync(DATA_FILE));
+    data.prices = req.body;
     fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2));
     res.json({ success: true });
 });
@@ -100,7 +101,39 @@ app.post('/api/data/order', (req, res) => {
     res.json({ success: true });
 });
 
-// API: Update social links
+// API: Scan for images
+app.get('/api/scan-uploads', (req, res) => {
+    let allFiles = [];
+    if (fs.existsSync(UPLOADS_DIR)) {
+        const files = fs.readdirSync(UPLOADS_DIR).filter(file => ['.png', '.jpg', '.jpeg', '.webp'].includes(path.extname(file).toLowerCase())).map(file => `uploads/${file}`);
+        allFiles.push(...files);
+    }
+    const rootFiles = fs.readdirSync(__dirname).filter(file => {
+        const ext = path.extname(file).toLowerCase();
+        return ['.png', '.jpg', '.jpeg', '.webp'].includes(ext) && !['logo.png', 'pattern.png'].includes(file.toLowerCase());
+    });
+    allFiles.push(...rootFiles);
+    res.json(allFiles);
+});
+
+// Bulk add images
+app.post('/api/images/bulk', (req, res) => {
+    const data = JSON.parse(fs.readFileSync(DATA_FILE));
+    const newImages = req.body.images.map((img, i) => ({ ...img, id: Date.now() + i }));
+    data.images.push(...newImages);
+    fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2));
+    res.json({ success: true, count: newImages.length });
+});
+
+// Delete individual image
+app.delete('/api/images/:id', (req, res) => {
+    const data = JSON.parse(fs.readFileSync(DATA_FILE));
+    data.images = data.images.filter(img => img.id != req.params.id);
+    fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2));
+    res.json({ success: true });
+});
+
+// Update social
 app.post('/api/social', (req, res) => {
     const data = JSON.parse(fs.readFileSync(DATA_FILE));
     data.social = req.body;
@@ -108,6 +141,4 @@ app.post('/api/social', (req, res) => {
     res.json({ success: true });
 });
 
-app.listen(PORT, () => {
-    console.log(`🚀 Server running on port ${PORT}`);
-});
+app.listen(PORT, () => { console.log(`🚀 Server running on port ${PORT}`); });

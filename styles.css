@@ -188,8 +188,8 @@ nav ul li a:hover::after {
     transform: translateY(30px);
     animation: fadeInUp 1s forwards;
     letter-spacing: -1px;
-    padding: 0.5rem 1rem;
-    line-height: 1.4;
+    padding: 1rem 1rem; /* Increased padding to prevent accent clipping */
+    line-height: 1.6; /* Increased line-height for Arabic Tashkeel */
     display: inline-block;
 }
 
@@ -589,33 +589,167 @@ footer {
     color: var(--accent-color);
 }
 
-/* Responsive */
+/* --- Responsive & Premium Polish --- */
+
+/* Ultra Responsive Adjustments */
+@media (max-width: 1024px) {
+    .admin-wrapper {
+        grid-template-columns: 1fr;
+        margin-top: 100px;
+        gap: 1.5rem;
+    }
+    .admin-sidebar {
+        position: relative;
+        top: 0;
+        display: flex;
+        overflow-x: auto;
+        gap: 1rem;
+        padding: 1rem;
+        background: rgba(255,255,255,0.02);
+        scrollbar-width: none;
+    }
+    .admin-sidebar::-webkit-scrollbar { display: none; }
+    
+    .side-btn {
+        white-space: nowrap;
+        width: auto;
+        margin-bottom: 0;
+        padding: 1rem 1.8rem;
+        font-size: 1rem;
+    }
+}
+
 @media (max-width: 768px) {
     header {
         flex-direction: column;
-        padding: 1rem;
-        gap: 0.5rem;
+        padding: 1.5rem 1rem;
+        gap: 1.2rem;
     }
-    
+    .logo-container img {
+        height: 70px;
+    }
     nav ul {
-        gap: 0.8rem;
+        gap: 1.2rem;
+        flex-wrap: wrap;
+        justify-content: center;
     }
-
-    nav ul li a {
-        font-size: 0.8rem;
+    nav ul li a { 
+        font-size: 1.05rem; /* Larger for mobile touch */
+        padding: 0.5rem;
     }
 
     .hero {
-        height: auto;
-        min-height: 50vh;
-        padding-top: 130px;
+        padding-top: 180px;
+        padding-bottom: 4rem;
+        min-height: auto;
     }
-    
-    .hero h1 { font-size: 2.2rem; }
-    .section-title h2 { font-size: 1.6rem; }
-    .gallery-grid { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); }
-    .about-content { padding: 1rem; }
-    section { padding: 2rem 5%; }
-    
-    .close-modal { top: 10px; right: 20px; font-size: 40px; }
+    .hero h1 {
+        font-size: clamp(2.4rem, 12vw, 3.8rem) !important;
+        line-height: 1.4;
+        margin-bottom: 1.5rem;
+        padding: 0 1rem;
+    }
+    .hero p {
+        font-size: 1.2rem !important;
+        padding: 0 8%;
+        line-height: 1.6;
+    }
+    .section-title {
+        margin-bottom: 3rem;
+    }
+    .section-title h2 {
+        font-size: 2.2rem;
+    }
+    .gallery-grid {
+        grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+        gap: 1rem;
+        padding: 0 10px;
+    }
+    .admin-main {
+        padding: 1.5rem;
+    }
+    .stat-card .val {
+        font-size: 1.8rem;
+    }
+    .price-row {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 1.5rem;
+    }
+    .price-row label {
+        width: 100% !important;
+        margin-bottom: 0.8rem;
+        font-size: 1.1rem;
+    }
+    section {
+        padding: 4rem 5%;
+    }
+}
+
+/* Large Screens Optimization */
+@media (min-width: 1600px) {
+    .admin-wrapper, .hero, .pricing-section, #portfolio, #about {
+        max-width: 1600px;
+        margin-left: auto;
+        margin-right: auto;
+    }
+    .hero h1 {
+        font-size: 7rem !important;
+    }
+}
+
+/* Scrollbar Styling for Premium Feel */
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+::-webkit-scrollbar-track {
+    background: var(--bg-color);
+}
+::-webkit-scrollbar-thumb {
+    background: var(--accent-color);
+    border-radius: 10px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #fff;
+}
+
+/* --- Smart Scroll Button --- */
+#scroll-nav-btn {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 60px;
+    height: 60px;
+    background: var(--accent-color);
+    color: #000;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 5000;
+    display: none; /* Initially hidden */
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5), 0 0 15px rgba(201, 168, 106, 0.3);
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+#scroll-nav-btn:hover {
+    transform: scale(1.1);
+    background: #fff;
+    box-shadow: 0 15px 40px rgba(201, 168, 106, 0.5);
+}
+
+#scroll-nav-btn:active {
+    transform: scale(0.9);
+}
+
+@media (max-width: 768px) {
+    #scroll-nav-btn {
+        bottom: 25px;
+        right: 25px;
+        width: 55px;
+        height: 55px;
+    }
 }
