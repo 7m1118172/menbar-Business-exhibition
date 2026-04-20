@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,239 +8,59 @@
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
-        .admin-wrapper {
-            max-width: 1300px;
-            margin: 120px auto;
-            display: grid;
-            grid-template-columns: 280px 1fr;
-            gap: 2rem;
-            padding: 0 5%;
-        }
-
-        .admin-sidebar {
-            background: var(--card-bg);
-            padding: 2rem;
-            border-radius: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            height: fit-content;
-            position: sticky;
-            top: 120px;
-        }
-
-        .side-btn {
-            display: block;
-            width: 100%;
-            padding: 1rem;
-            margin-bottom: 0.5rem;
-            background: transparent;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            color: #fff;
-            border-radius: 10px;
-            cursor: pointer;
-            text-align: right;
-            transition: 0.3s;
-            font-family: inherit;
-        }
-
-        .side-btn.active,
-        .side-btn:hover {
-            background: var(--accent-color);
-            color: #000;
-        }
-
-        .admin-main {
-            background: var(--card-bg);
-            padding: 2.5rem;
-            border-radius: 20px;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            overflow-x: hidden;
-        }
-
-        .admin-section {
-            display: none;
-        }
-
-        .admin-section.active {
-            display: block;
-        }
-
-        .local-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-            gap: 1rem;
-            margin: 1.5rem 0;
-        }
-
-        .local-item {
-            position: relative;
-            cursor: pointer;
-            border-radius: 10px;
-            overflow: hidden;
-            border: 2px solid transparent;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 130px;
-            background: rgba(255, 255, 255, 0.02);
-        }
-
-        .local-item.selected {
-            border-color: var(--accent-color);
-        }
-
-        .local-item img {
-            max-width: 100%;
-            max-height: 100%;
-            object-fit: contain;
-        }
-
+        .admin-wrapper { max-width: 1300px; margin: 120px auto; display: grid; grid-template-columns: 280px 1fr; gap: 2rem; padding: 0 5%; }
+        .admin-sidebar { background: var(--card-bg); padding: 2rem; border-radius: 20px; border: 1px solid rgba(255, 255, 255, 0.1); height: fit-content; position: sticky; top: 120px; }
+        .side-btn { display: block; width: 100%; padding: 1rem; margin-bottom: 0.5rem; background: transparent; border: 1px solid rgba(255, 255, 255, 0.05); color: #fff; border-radius: 10px; cursor: pointer; text-align: right; transition: 0.3s; font-family: inherit; }
+        .side-btn.active, .side-btn:hover { background: var(--accent-color); color: #000; }
+        .admin-main { background: var(--card-bg); padding: 2.5rem; border-radius: 20px; backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); overflow-x: hidden; }
+        .admin-section { display: none; }
+        .admin-section.active { display: block; }
+        .local-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 1rem; margin: 1.5rem 0; }
+        .local-item { position: relative; cursor: pointer; border-radius: 10px; overflow: hidden; border: 2px solid transparent; display: flex; align-items: center; justify-content: center; height: 130px; background: rgba(255,255,255,0.02); }
+        .local-item.selected { border-color: var(--accent-color); }
+        .local-item img { max-width: 100%; max-height: 100%; object-fit: contain; }
+        
         /* Fixed Image Item List in Admin */
-        .image-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            background: rgba(255, 255, 255, 0.03);
-            padding: 0.8rem 1.2rem;
-            border-radius: 12px;
-            margin-bottom: 0.8rem;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            gap: 1rem;
-        }
-
-        .image-item img {
-            width: 60px;
-            height: 60px;
-            object-fit: cover;
-            border-radius: 8px;
-            border: 1px solid var(--accent-color);
-            flex-shrink: 0;
-        }
-
-        .image-item span {
-            font-size: 0.9rem;
-            color: #ccc;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-
-        .admin-controls {
-            display: flex;
-            gap: 0.5rem;
-            flex-shrink: 0;
-        }
-
-        .admin-controls .side-btn {
-            padding: 0.4rem 0.8rem;
-            height: auto;
-            margin: 0;
-            font-size: 0.9rem;
-            border-color: rgba(255, 255, 255, 0.1);
-        }
-
-        .btn-delete {
-            background: #ff4444 !important;
-            color: #fff !important;
-            padding: 0.4rem 0.8rem !important;
-            border-radius: 8px !important;
-            border: none !important;
-            cursor: pointer;
-        }
-
-        .grid-stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-        }
-
-        .stat-card {
-            background: rgba(255, 255, 255, 0.03);
-            padding: 1.5rem;
-            border-radius: 15px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            text-align: center;
-        }
-
-        .stat-card h4 {
-            color: var(--accent-color);
-            margin-bottom: 0.5rem;
-        }
-
-        .stat-card .val {
-            font-size: 2rem;
-            font-weight: 900;
-        }
-
-        .price-row {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            margin-bottom: 1rem;
-            background: rgba(255, 255, 255, 0.02);
-            padding: 1rem;
-            border-radius: 10px;
-        }
-
-        .reply-card {
-            background: rgba(201, 168, 106, 0.05);
-            border: 1px solid var(--accent-color);
-            padding: 1.5rem;
-            border-radius: 15px;
-            margin-bottom: 1.5rem;
-        }
-
-        .reply-card h4 {
-            color: var(--accent-color);
-            margin-bottom: 0.8rem;
-        }
-
-        .reply-text {
-            background: rgba(0, 0, 0, 0.3);
-            padding: 1rem;
-            border-radius: 10px;
-            font-size: 0.9rem;
-            white-space: pre-line;
-            margin-bottom: 1rem;
-        }
+        .image-item { display: flex; align-items: center; justify-content: space-between; background: rgba(255,255,255,0.03); padding: 0.8rem 1.2rem; border-radius: 12px; margin-bottom: 0.8rem; border: 1px solid rgba(255,255,255,0.05); gap: 1rem; }
+        .image-item img { width: 60px; height: 60px; object-fit: cover; border-radius: 8px; border: 1px solid var(--accent-color); flex-shrink: 0; }
+        .image-item span { font-size: 0.9rem; color: #ccc; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .admin-controls { display: flex; gap: 0.5rem; flex-shrink: 0; }
+        .admin-controls .side-btn { padding: 0.4rem 0.8rem; height: auto; margin: 0; font-size: 0.9rem; border-color: rgba(255,255,255,0.1); }
+        .btn-delete { background: #ff4444 !important; color: #fff !important; padding: 0.4rem 0.8rem !important; border-radius: 8px !important; border: none !important; cursor: pointer; }
+        .grid-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
+        .stat-card { background: rgba(255,255,255,0.03); padding: 1.5rem; border-radius: 15px; border: 1px solid rgba(255,255,255,0.05); text-align: center; }
+        .stat-card h4 { color: var(--accent-color); margin-bottom: 0.5rem; }
+        .stat-card .val { font-size: 2rem; font-weight: 900; }
+        .price-row { display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem; background: rgba(255,255,255,0.02); padding: 1rem; border-radius: 10px; }
+        .reply-card { background: rgba(201, 168, 106, 0.05); border: 1px solid var(--accent-color); padding: 1.5rem; border-radius: 15px; margin-bottom: 1.5rem; }
+        .reply-card h4 { color: var(--accent-color); margin-bottom: 0.8rem; }
+        .reply-text { background: rgba(0,0,0,0.3); padding: 1rem; border-radius: 10px; font-size: 0.9rem; white-space: pre-line; margin-bottom: 1rem; }
     </style>
 </head>
-
 <body>
-    <div id="admin-login-modal"
-        style="position:fixed; top:0; left:0; width:100%; height:100%; background:var(--bg-color); z-index:5000; display:flex; justify-content:center; align-items:center;">
+    <div id="admin-login-modal" style="position:fixed; top:0; left:0; width:100%; height:100%; background:var(--bg-color); z-index:5000; display:flex; justify-content:center; align-items:center;">
         <div class="login-box" style="text-align:center;">
-            <img src="https://github.com/7m1118172/logo-menbar-and-font/raw/main/%D9%84%D9%8لوجو%20بدوون%20خلفية.png"
-                style="height:80px; margin-bottom:1rem;">
+            <img src="https://github.com/7m1118172/logo-menbar-and-font/raw/main/%D9%84%D9%8لوجو%20بدوون%20خلفية.png" style="height:80px; margin-bottom:1rem;">
             <h2>إدارة منبر</h2>
-            <input type="password" id="admin-pass" placeholder="كلمة المرور"
-                style="width:100%; padding:1rem; margin:1rem 0; background:rgba(255,255,255,0.1); border:none; color:#fff; text-align:center;">
-            <button class="btn-action" onclick="checkPass()"
-                style="width:100%; padding:1rem; background:var(--accent-color); border:none; font-weight:bold; cursor:pointer;">دخول</button>
+            <input type="password" id="admin-pass" placeholder="كلمة المرور" style="width:100%; padding:1rem; margin:1rem 0; background:rgba(255,255,255,0.1); border:none; color:#fff; text-align:center;">
+            <button class="btn-action" onclick="checkPass()" style="width:100%; padding:1rem; background:var(--accent-color); border:none; font-weight:bold; cursor:pointer;">دخول</button>
         </div>
     </div>
 
     <header>
-        <div class="logo-container"><img
-                src="https://github.com/7m1118172/logo-menbar-and-font/raw/main/%D9%84%D9%8لوجو%20بدوون%20خلفية.png">
-        </div>
+        <div class="logo-container"><img src="https://github.com/7m1118172/logo-menbar-and-font/raw/main/%D9%84%D9%8لوجو%20بدوون%20خلفية.png"></div>
         <div style="color: var(--accent-color); font-weight: bold;">المنظومة التجارية الموحدة</div>
     </header>
 
     <div class="admin-wrapper" id="admin-content" style="display: none;">
         <div class="admin-sidebar">
-            <button class="side-btn active" onclick="showSection('revenue')"><i class="fas fa-hand-holding-usd"></i>
-                الأرباح والطلبات</button>
+            <button class="side-btn active" onclick="showSection('revenue')"><i class="fas fa-hand-holding-usd"></i> الأرباح والطلبات</button>
             <button class="side-btn" onclick="showSection('local')"><i class="fas fa-images"></i> معرض الصور</button>
             <button class="side-btn" onclick="showSection('prices')"><i class="fas fa-tags"></i> إدارة الأسعار</button>
-            <button class="side-btn" onclick="showSection('replies')"><i class="fas fa-comment-dots"></i> الردود
-                الذكية</button>
+            <button class="side-btn" onclick="showSection('replies')"><i class="fas fa-comment-dots"></i> الردود الذكية</button>
             <button class="side-btn" onclick="showSection('stats')"><i class="fas fa-chart-line"></i> الزوار</button>
-            <button class="side-btn" onclick="showSection('backup')"><i class="fas fa-database"></i> النسخ
-                الاحتياطي</button>
-            <button class="side-btn" onclick="location.reload()" style="color:#ff6666;"><i
-                    class="fas fa-sign-out-alt"></i> خروج</button>
+            <button class="side-btn" onclick="showSection('backup')"><i class="fas fa-database"></i> النسخ الاحتياطي</button>
+            <button class="side-btn" onclick="location.reload()" style="color:#ff6666;"><i class="fas fa-sign-out-alt"></i> خروج</button>
         </div>
 
         <div class="admin-main">
@@ -249,54 +68,33 @@
             <div id="section-revenue" class="admin-section active">
                 <h2>إحصائيات الأرباح والطلبات</h2>
                 <div class="grid-stats">
-                    <div class="stat-card">
-                        <h4>إجمالي الأرباح</h4>
-                        <div class="val" id="total-revenue" style="color:#4caf50;">0.000 د.ب</div>
-                    </div>
-                    <div class="stat-card">
-                        <h4>عدد الطلبات</h4>
-                        <div class="val" id="total-orders">0</div>
-                    </div>
-                    <div class="stat-card">
-                        <h4>طلبات المواسم</h4>
-                        <div class="val" id="season-orders">0</div>
-                    </div>
+                    <div class="stat-card"><h4>إجمالي الأرباح</h4><div class="val" id="total-revenue" style="color:#4caf50;">0.000 د.ب</div></div>
+                    <div class="stat-card"><h4>عدد الطلبات</h4><div class="val" id="total-orders">0</div></div>
+                    <div class="stat-card"><h4>طلبات المواسم</h4><div class="val" id="season-orders">0</div></div>
                 </div>
                 <h3>سجل العمليات</h3>
                 <div id="orders-list" style="margin-top:1rem;"></div>
-                <button class="btn-action" onclick="resetRevenue()"
-                    style="background:#ff4444; color:#fff; width:auto; padding:0.6rem 2rem; margin-top:2rem;">تصفير سجل
-                    المبيعات (حماية)</button>
+                <button class="btn-action" onclick="resetRevenue()" style="background:#ff4444; color:#fff; width:auto; padding:0.6rem 2rem; margin-top:2rem;">تصفير سجل المبيعات (حماية)</button>
             </div>
 
             <!-- Prices Management -->
             <div id="section-prices" class="admin-section">
                 <h2>تعديل أسعار الخدمات</h2>
                 <div id="prices-form" style="margin-top:2rem;">
-                    <div class="price-row"
-                        style="border: 1px solid var(--accent-color); background: rgba(201, 168, 106, 0.05); flex-wrap: wrap;">
-                        <label style="width:150px; font-weight:bold; color:var(--accent-color);">الباقة الشاملة
-                            (سنوي)</label>
+                    <div class="price-row" style="border: 1px solid var(--accent-color); background: rgba(201, 168, 106, 0.05); flex-wrap: wrap;">
+                        <label style="width:150px; font-weight:bold; color:var(--accent-color);">الباقة الشاملة (سنوي)</label>
                         <input type="number" id="pr-fullyear" style="width:100px;"><span>د.ب</span>
-                        <div
-                            style="flex-basis: 100%; display: flex; align-items: center; gap: 0.5rem; margin-top: 0.5rem;">
+                        <div style="flex-basis: 100%; display: flex; align-items: center; gap: 0.5rem; margin-top: 0.5rem;">
                             <input type="checkbox" id="show-fullyear" style="width: auto;">
-                            <label for="show-fullyear" style="margin: 0; cursor: pointer;">إظهار الباقة الشاملة في
-                                الموقع</label>
+                            <label for="show-fullyear" style="margin: 0; cursor: pointer;">إظهار الباقة الشاملة في الموقع</label>
                         </div>
                     </div>
-                    <div class="price-row"><label style="width:150px">محرم الحرام</label><input type="number"
-                            id="pr-muharram"><span>د.ب</span></div>
-                    <div class="price-row"><label style="width:150px">صفر الخير</label><input type="number"
-                            id="pr-safar"><span>د.ب</span></div>
-                    <div class="price-row"><label style="width:150px">ربيع الأول إلى قبل رجب</label><input type="number"
-                            id="pr-rabia"><span>د.ب</span></div>
-                    <div class="price-row"><label style="width:150px">الموسم العبادي</label><input type="number"
-                            id="pr-rajab"><span>د.ب</span></div>
-                    <div class="price-row"><label style="width:150px">شوال إلى قبل محرم</label><input type="number"
-                            id="pr-shawwal"><span>د.ب</span></div>
-                    <div class="price-row"><label style="width:150px">إعلان فردي</label><input type="number"
-                            id="pr-single"><span>د.ب</span></div>
+                    <div class="price-row"><label style="width:150px">محرم الحرام</label><input type="number" id="pr-muharram"><span>د.ب</span></div>
+                    <div class="price-row"><label style="width:150px">صفر الخير</label><input type="number" id="pr-safar"><span>د.ب</span></div>
+                    <div class="price-row"><label style="width:150px">ربيع الأول إلى قبل رجب</label><input type="number" id="pr-rabia"><span>د.ب</span></div>
+                    <div class="price-row"><label style="width:150px">الموسم العبادي</label><input type="number" id="pr-rajab"><span>د.ب</span></div>
+                    <div class="price-row"><label style="width:150px">شوال إلى قبل محرم</label><input type="number" id="pr-shawwal"><span>د.ب</span></div>
+                    <div class="price-row"><label style="width:150px">إعلان فردي</label><input type="number" id="pr-single"><span>د.ب</span></div>
                     <button class="btn-action" onclick="savePrices()">حفظ التعديلات</button>
                 </div>
             </div>
@@ -304,40 +102,32 @@
             <!-- Smart Replies -->
             <div id="section-replies" class="admin-section">
                 <h2>بنك الردود الملكية (لإقناع الزبون)</h2>
-
+                
                 <div class="reply-card">
                     <h4>1. الرد على طلب "باقة موسم" (جذب واحترافية)</h4>
                     <div class="reply-text" id="rep-1">عظم الله أجوركم وأحسن الله لكم العزاء..
-                        يسعدنا جداً أن نكون جزءاً من نجاح وهيبة مجالسكم الكريمة في هذا الموسم. "باقة المواسم" لدينا ليست
-                        مجرد تصاميم، بل هي هوية بصرية متكاملة تليق بعظمة المناسبة وتوفر عليكم عناء المتابعة الفردية.
+يسعدنا جداً أن نكون جزءاً من نجاح وهيبة مجالسكم الكريمة في هذا الموسم. "باقة المواسم" لدينا ليست مجرد تصاميم، بل هي هوية بصرية متكاملة تليق بعظمة المناسبة وتوفر عليكم عناء المتابعة الفردية.
 
-                        يرجى تزويدنا بالشعار الرسمي للجهة (Logo) والجدول المقترح لنبدأ العمل فوراً بأعلى معايير الإتقان.
-                    </div>
-                    <button class="btn-action" style="width:auto; padding: 0.6rem 2rem;"
-                        onclick="copyReply('rep-1')">نسخ الرد الملكي <i class="fas fa-copy"></i></button>
+يرجى تزويدنا بالشعار الرسمي للجهة (Logo) والجدول المقترح لنبدأ العمل فوراً بأعلى معايير الإتقان.</div>
+                    <button class="btn-action" style="width:auto; padding: 0.6rem 2rem;" onclick="copyReply('rep-1')">نسخ الرد الملكي <i class="fas fa-copy"></i></button>
                 </div>
 
                 <div class="reply-card">
                     <h4>2. الرد على "طلب إعلان فردي" (سرعة وثقة)</h4>
                     <div class="reply-text" id="rep-2">أهلاً بك في منبر..
-                        وصلت تفاصيل طلبكم، وفريق العمل جاهز لتنفيذ التصميم بأقصى دقة وأسرع وقت ممكن. نحن نحرص في "منبر"
-                        على أن تكون لكل إعلان بصمة فريدة تجذب الجمهور.
+وصلت تفاصيل طلبكم، وفريق العمل جاهز لتنفيذ التصميم بأقصى دقة وأسرع وقت ممكن. نحن نحرص في "منبر" على أن تكون لكل إعلان بصمة فريدة تجذب الجمهور.
 
-                        هل تودون إضافة أي لمسات إضافية أو صور محددة؟ سيصلكم العمل جاهزاً وبأعلى جودة خلال ساعات معدودة
-                        بإذن الله.</div>
-                    <button class="btn-action" style="width:auto; padding: 0.6rem 2rem;"
-                        onclick="copyReply('rep-2')">نسخ الرد السريع <i class="fas fa-copy"></i></button>
+هل تودون إضافة أي لمسات إضافية أو صور محددة؟ سيصلكم العمل جاهزاً وبأعلى جودة خلال ساعات معدودة بإذن الله.</div>
+                    <button class="btn-action" style="width:auto; padding: 0.6rem 2rem;" onclick="copyReply('rep-2')">نسخ الرد السريع <i class="fas fa-copy"></i></button>
                 </div>
 
                 <div class="reply-card">
                     <h4>3. عند "تسليم العمل" (ختام فخم)</h4>
                     <div class="reply-text" id="rep-3">تم بحمد الله الانتهاء من تجهيز طلبكم على أكمل وجه..
-                        نسأل الله أن يبارك في عملكم خالصاً لوجهه الكريم. تجدون العمل المرفق بأبعاد دقيقة وجودة عالية
-                        جداً (High Resolution).
+نسأل الله أن يبارك في عملكم خالصاً لوجهه الكريم. تجدون العمل المرفق بأبعاد دقيقة وجودة عالية جداً (High Resolution).
 
-                        في "منبر"، رضاكم هو غايتنا، ونحن بانتظار تعاوناتكم القادمة دائماً. موفقين لكل خير.</div>
-                    <button class="btn-action" style="width:auto; padding: 0.6rem 2rem;"
-                        onclick="copyReply('rep-3')">نسخ رد التسليم <i class="fas fa-copy"></i></button>
+في "منبر"، رضاكم هو غايتنا، ونحن بانتظار تعاوناتكم القادمة دائماً. موفقين لكل خير.</div>
+                    <button class="btn-action" style="width:auto; padding: 0.6rem 2rem;" onclick="copyReply('rep-3')">نسخ رد التسليم <i class="fas fa-copy"></i></button>
                 </div>
             </div>
 
@@ -352,14 +142,8 @@
             <div id="section-stats" class="admin-section">
                 <h2>زوار الموقع</h2>
                 <div class="grid-stats">
-                    <div class="stat-card">
-                        <h4>اليوم</h4>
-                        <div class="val" id="stats-today">0</div>
-                    </div>
-                    <div class="stat-card">
-                        <h4>هذا الشهر</h4>
-                        <div class="val" id="stats-month">0</div>
-                    </div>
+                    <div class="stat-card"><h4>اليوم</h4><div class="val" id="stats-today">0</div></div>
+                    <div class="stat-card"><h4>هذا الشهر</h4><div class="val" id="stats-month">0</div></div>
                 </div>
                 <div id="stats-history-list"></div>
             </div>
@@ -375,13 +159,13 @@
 
     <script>
         let galleryImages = [];
-        function checkPass() { if (document.getElementById('admin-pass').value === '123123') { document.getElementById('admin-login-modal').style.display = 'none'; document.getElementById('admin-content').style.display = 'grid'; initAdmin(); } }
+        function checkPass() { if(document.getElementById('admin-pass').value==='123123') { document.getElementById('admin-login-modal').style.display='none'; document.getElementById('admin-content').style.display='grid'; initAdmin(); } }
         function showSection(id) {
-            document.querySelectorAll('.admin-section').forEach(s => s.classList.remove('active'));
-            document.getElementById('section-' + id).classList.add('active');
-            document.querySelectorAll('.side-btn').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.admin-section').forEach(s=>s.classList.remove('active'));
+            document.getElementById('section-'+id).classList.add('active');
+            document.querySelectorAll('.side-btn').forEach(b=>b.classList.remove('active'));
             event.currentTarget.classList.add('active');
-            if (id === 'local') scanLocalFiles();
+            if(id==='local') scanLocalFiles();
         }
 
         async function initAdmin() {
@@ -396,7 +180,7 @@
         }
 
         function loadPrices(p, s) {
-            if (!p) return;
+            if(!p) return;
             document.getElementById('pr-muharram').value = p.muharram || 25;
             document.getElementById('pr-safar').value = p.safar || 20;
             document.getElementById('pr-rajab').value = p.rajab || 18;
@@ -404,7 +188,7 @@
             document.getElementById('pr-shawwal').value = p.shawwal || 8;
             document.getElementById('pr-single').value = p.single || 3;
             document.getElementById('pr-fullyear').value = p.fullyear || 100;
-            if (s) document.getElementById('show-fullyear').checked = s.showFullYear !== false;
+            if(s) document.getElementById('show-fullyear').checked = s.showFullYear !== false;
         }
 
         async function savePrices() {
@@ -420,8 +204,8 @@
             const s = {
                 showFullYear: document.getElementById('show-fullyear').checked
             };
-            await fetch('/api/prices', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(p) });
-            await fetch('/api/settings', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(s) });
+            await fetch('/api/prices', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(p) });
+            await fetch('/api/settings', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(s) });
             alert('تم حفظ الإعدادات الجديدة بنجاح');
             initAdmin();
         }
@@ -431,11 +215,11 @@
             list.innerHTML = '';
             let total = 0;
             let seasons = 0;
-            if (!orders) return;
-
+            if(!orders) return;
+            
             orders.reverse().forEach(o => {
                 total += parseFloat(o.price);
-                if (o.type === 'season') seasons++;
+                if(o.type === 'season') seasons++;
                 const item = document.createElement('div');
                 item.className = 'image-item';
                 item.innerHTML = `<div><b>${o.name}</b> <small>${o.date.split('T')[0]}</small></div><div style="color:#4caf50">${o.price} د.ب</div>`;
@@ -448,17 +232,17 @@
 
         async function resetRevenue() {
             const pass = prompt('يرجى إدخال كلمة سر الحماية (123) للتصفير:');
-            if (pass) {
+            if(pass) {
                 try {
-                    const res = await fetch('/api/orders/reset', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ pass }) });
+                    const res = await fetch('/api/orders/reset', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({pass}) });
                     const resData = await res.json();
-                    if (res.ok && resData.success) {
-                        alert('تم تصفير سجل الأرباح');
-                        initAdmin();
+                    if(res.ok && resData.success) { 
+                        alert('تم تصفير سجل الأرباح'); 
+                        initAdmin(); 
                     } else {
                         alert('كلمة السر خاطئة أو حدث خطأ!');
                     }
-                } catch (e) {
+                } catch(e) {
                     alert('فشل الاتصال بالخادم!');
                 }
             }
@@ -472,11 +256,11 @@
 
         // Standard Functions
         function renderStats(stats) {
-            if (!stats || !stats.daily) return;
+            if(!stats || !stats.daily) return;
             const today = new Date().toISOString().split('T')[0];
             document.getElementById('stats-today').innerText = stats.daily[today] || 0;
             let monthTotal = 0;
-            Object.keys(stats.daily).forEach(d => { if (d.startsWith(today.substring(0, 7))) monthTotal += stats.daily[d]; });
+            Object.keys(stats.daily).forEach(d => { if(d.startsWith(today.substring(0,7))) monthTotal += stats.daily[d]; });
             document.getElementById('stats-month').innerText = monthTotal;
         }
         function loadAdminList(images) {
@@ -501,28 +285,27 @@
             const names = { 'khutaba': 'الخطابة الحسينية', 'mawakib': 'المواكب والعزاء', 'mawalid': 'المواليد والأفراح', 'other': 'أخرى' };
             return names[cat] || cat;
         }
-        async function moveImage(i, d) {
-            let next = i + d; if (next < 0 || next >= galleryImages.length) return;
+        async function moveImage(i,d) {
+            let next = i+d; if(next<0 || next>=galleryImages.length) return;
             [galleryImages[i], galleryImages[next]] = [galleryImages[next], galleryImages[i]];
-            await fetch('/api/data/order', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ images: galleryImages }) });
+            await fetch('/api/data/order', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({images:galleryImages}) });
             initAdmin();
         }
-        async function deleteImage(id) { if (confirm('حذف؟')) { await fetch(`/api/images/${id}`, { method: 'DELETE' }); initAdmin(); } }
+        async function deleteImage(id) { if(confirm('حذف؟')) { await fetch(`/api/images/${id}`, {method:'DELETE'}); initAdmin(); } }
         async function scanLocalFiles() {
             const res = await fetch('/api/scan-uploads'); const files = await res.json() || [];
             const grid = document.getElementById('local-files-grid'); grid.innerHTML = '';
             files.forEach(f => {
                 const d = document.createElement('div'); d.className = 'local-item'; d.onclick = () => addToGallery(f);
-                d.innerHTML = `<img src="/${f.replace(/^\//, '')}">`; grid.appendChild(d);
+                d.innerHTML = `<img src="/${f.replace(/^\//,'')}">`; grid.appendChild(d);
             });
         }
         async function addToGallery(f) {
             const cat = prompt('القسم (khutaba, mawakib, mawalid, other):', 'mawakib');
-            if (cat) { await fetch('/api/images/bulk', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ images: [{ url: '/' + f.replace(/^\//, ''), category: cat }] }) }); initAdmin(); }
+            if(cat) { await fetch('/api/images/bulk', {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({images:[{url:'/'+f.replace(/^\//,''), category:cat}]})}); initAdmin(); }
         }
         async function updateBackupArea(data) { document.getElementById('backup-area').value = JSON.stringify(data || await (await fetch('/api/data')).json(), null, 2); }
         function copyBackup() { document.getElementById('backup-area').select(); document.execCommand('copy'); alert('تم النسخ'); }
     </script>
 </body>
-
 </html>

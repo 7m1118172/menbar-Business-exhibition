@@ -103,6 +103,15 @@ app.post('/api/data/order', (req, res) => {
 
 // API: Scan for images
 app.get('/api/scan-uploads', (req, res) => {
+    let allFiles = [];
+    if (fs.existsSync(UPLOADS_DIR)) {
+        const files = fs.readdirSync(UPLOADS_DIR).filter(file => ['.png', '.jpg', '.jpeg', '.webp'].includes(path.extname(file).toLowerCase())).map(file => `uploads/${file}`);
+        allFiles.push(...files);
+    }
+    const rootFiles = fs.readdirSync(__dirname).filter(file => {
+        const ext = path.extname(file).toLowerCase();
+        return ['.png', '.jpg', '.jpeg', '.webp'].includes(ext) && !['logo.png', 'pattern.png'].includes(file.toLowerCase());
+    });
     allFiles.push(...rootFiles);
     res.json(allFiles);
 });
