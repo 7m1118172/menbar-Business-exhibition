@@ -11,7 +11,7 @@ if (!fs.existsSync(NEW_ADS_DIR)) fs.mkdirSync(NEW_ADS_DIR);
 if (!fs.existsSync(UPLOADS_DIR)) fs.mkdirSync(UPLOADS_DIR);
 
 // 1. Move files from 'أعمال_جديدة' to 'uploads'
-const newFiles = fs.readdirSync(NEW_ADS_DIR).filter(file => 
+const newFiles = fs.readdirSync(NEW_ADS_DIR).filter(file =>
     ['.jpg', '.jpeg', '.png', '.webp'].includes(path.extname(file).toLowerCase())
 );
 
