@@ -79,7 +79,7 @@ app.get('/api/scan-uploads', (req, res) => {
 app.post('/api/images/bulk', (req, res) => {
     const data = JSON.parse(fs.readFileSync(DATA_FILE));
     const newImages = req.body.images.map((img, i) => ({ ...img, id: Date.now() + i }));
-    data.images.push(...newImages);
+    data.images.unshift(...newImages);
     fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2));
     res.json({ success: true, count: newImages.length });
 });

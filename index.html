@@ -119,7 +119,7 @@
             }
 
             grid.innerHTML = '';
-            images.reverse().forEach(img => {
+            images.forEach(img => {
                 const item = document.createElement('div');
                 item.className = `gallery-item ${img.category}`;
                 item.innerHTML = `
